@@ -1124,7 +1124,9 @@ function SolarCalculator({ onOpenShop, products }) {
     if (isFirstRender.current) { isFirstRender.current = false; return; }
     if (!calcCardRef.current) return;
     const t = setTimeout(() => {
-      calcCardRef.current.scrollIntoView({ behavior:"smooth", block:"start" });
+      const headerOffset = 92;
+      const y = calcCardRef.current.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+      window.scrollTo({ top: Math.max(0, y), behavior:"smooth" });
     }, 30);
     return () => clearTimeout(t);
   }, [step]);
@@ -2059,12 +2061,15 @@ function SunPowerUASite() {
     else { setTgError(res.error); }
   };
 
-  // Скрол до секції
+  // Скрол до секції — з відступом під фіксовану шапку (інакше заголовок секції ховається під нею)
   const scrollTo = (id) => {
     setDrawer(false);
     setTimeout(() => {
       const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior:"smooth", block:"start" });
+      if (!el) return;
+      const headerOffset = 92; // висота фіксованої шапки + запас
+      const y = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+      window.scrollTo({ top: Math.max(0, y), behavior:"smooth" });
     }, 100);
   };
 
