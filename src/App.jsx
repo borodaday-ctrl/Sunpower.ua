@@ -2958,7 +2958,6 @@ function SunPowerUASite() {
                 { label:"YouTube", url:"https://www.youtube.com/@sunpowerua", path:"M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" },
               ].map((s,i)=>(
                 <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.label}
-                  onClick={(e)=>{ e.preventDefault(); window.open(s.url, "_blank", "noopener,noreferrer"); }}
                   style={{ width:44,height:44,borderRadius:"50%",border:"1.5px solid rgba(255,255,255,.15)",display:"flex",alignItems:"center",justifyContent:"center",color:"rgba(255,255,255,.5)",transition:"all .25s",textDecoration:"none",cursor:"pointer" }}
                   onMouseEnter={e=>{ e.currentTarget.style.borderColor="#22C55E"; e.currentTarget.style.color="#22C55E"; e.currentTarget.style.background="rgba(34,197,94,.1)"; }}
                   onMouseLeave={e=>{ e.currentTarget.style.borderColor="rgba(255,255,255,.15)"; e.currentTarget.style.color="rgba(255,255,255,.5)"; e.currentTarget.style.background="transparent"; }}>
