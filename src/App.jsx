@@ -342,7 +342,7 @@ h3{font-family:'Syne',sans-serif;font-size:clamp(15px,2vw,20px);font-weight:700;
 .faq-btn{width:100%;background:none;border:none;padding:18px 22px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;color:var(--text);gap:12px}
 .faq-chevron{transition:transform .4s ease;flex-shrink:0;color:#22C55E}
 .faq-chevron.open{transform:rotate(180deg)}
-.faq-body{max-height:0;overflow:hidden;transition:max-height .4s ease;font-size:14px;line-height:1.75;color:var(--sub)}
+.faq-body{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;font-size:14px;line-height:1.75;color:var(--sub);padding:0 22px}
 .faq-body.open{max-height:260px;padding:0 22px 18px}
 
 .av-stack{display:flex}
@@ -448,7 +448,7 @@ const SEED_PRODUCTS = [
   { id:4, cat:"Економ", name:"СЕС Економ 11 кВт", price:320300, oldPrice:null, mountUAH:64100, img:null, imgSrc:KIT_IMG, badge:null, rating:4.7, reviews:46, power:"11 кВт", warranty:"5 років", brand:"Sun Power UA", desc:"24×Ulica 610Вт + EaSun 11кВт SMG-II 48V + Збірка 16кВт·год 48V. Курс $1=44.5₴, ціна орієнтовна.", panelName:"24×Ulica 610Вт", invName:"EaSun 11кВт SMG-II 48V", akbName:"Збірка 16кВт·год 48V", specs:{"panel": [["Потужність", "610 Вт"], ["ККД", "21.3%"], ["Тип елементів", "Mono PERC"], ["К-сть елементів", "132"], ["Напруга Vmp", "41.8 В"], ["Гарантія", "12/25 років"], ["Розміри", "2278×1134×35 мм"]], "inverter": [["Потужність", "11 кВт"], ["Фаза", "1"], ["Напруга", "48В (LV)"], ["MPPT", "2"], ["ККД", "96%"], ["Тип", "Гібридний"]], "akb": [["Ємність", "16 кВт·год"], ["Хімія", "LiFePO4"], ["Напруга", "51.2В"], ["Циклів заряду", "6000+"]]} },
   { id:5, cat:"Стандарт", name:"СЕС Стандарт 5 кВт", price:201300, oldPrice:null, mountUAH:15600, img:null, imgSrc:KIT_IMG, badge:"new", rating:4.75, reviews:53, power:"5 кВт", warranty:"5 років", brand:"Sun Power UA", desc:"8×LONGi 615M + Deye 5K гібрид + Deye SE-F16 16кВт·год. Курс $1=44.5₴, ціна орієнтовна.", panelName:"8×LONGi 615M", invName:"Deye 5K гібрид", akbName:"Deye SE-F16 16кВт·год", specs:{"panel": [["Потужність", "615 Вт"], ["ККД", "22.5%"], ["Тип елементів", "HPBC Mono (Hi-MO 6)"], ["К-сть елементів", "132"], ["Напруга Vmp", "43.8 В"], ["Гарантія", "15/30 років"], ["Розміри", "2278×1134×30 мм"]], "inverter": [["Потужність", "5 кВт"], ["Фаза", "1"], ["Напруга", "48В (LV)"], ["MPPT", "2"], ["ККД", "97.6%"], ["Тип", "Гібридний"]], "akb": [["Ємність", "16 кВт·год"], ["Хімія", "LiFePO4"], ["Напруга", "51.2В / 314Ah"], ["Циклів заряду", "6000+"], ["Гарантія", "10 років"]]} },
   { id:6, cat:"Стандарт", name:"СЕС Стандарт 8 кВт", price:260300, oldPrice:null, mountUAH:21400, img:null, imgSrc:KIT_IMG, badge:"new", rating:4.8, reviews:60, power:"8 кВт", warranty:"5 років", brand:"Sun Power UA", desc:"14×LONGi 615M + Deye SUN-8K гібрид LV + Deye SE-F16 16кВт·год. Курс $1=44.5₴, ціна орієнтовна.", panelName:"14×LONGi 615M", invName:"Deye SUN-8K гібрид LV", akbName:"Deye SE-F16 16кВт·год", specs:{"panel": [["Потужність", "615 Вт"], ["ККД", "22.5%"], ["Тип елементів", "HPBC Mono (Hi-MO 6)"], ["К-сть елементів", "132"], ["Напруга Vmp", "43.8 В"], ["Гарантія", "15/30 років"], ["Розміри", "2278×1134×30 мм"]], "inverter": [["Потужність", "8 кВт"], ["Фаза", "1"], ["Напруга", "48В (LV)"], ["MPPT", "2"], ["ККД", "97.6%"], ["Тип", "Гібридний"]], "akb": [["Ємність", "16 кВт·год"], ["Хімія", "LiFePO4"], ["Напруга", "51.2В / 314Ah"], ["Циклів заряду", "6000+"], ["Гарантія", "10 років"]]} },
-  { id:7, cat:"Стандарт", name:"СЕС Стандарт 10 кВт", price:323700, oldPrice:null, mountUAH:31800, img:null, imgSrc:KIT_IMG, badge:"new", rating:4.85, reviews:67, power:"10 кВт", warranty:"5 років", brand:"Sun Power UA", desc:"18×LONGi 615M + Deye SUN-10K гібрид LV + Deye SE-F16-С 16кВт·год. Курс $1=44.5₴, ціна орієнтовна.", panelName:"18×LONGi 615M", invName:"Deye SUN-10K гібрид LV", akbName:"Deye SE-F16-С 16кВт·год", specs:{"panel": [["Потужність", "615 Вт"], ["ККД", "22.5%"], ["Тип елементів", "HPBC Mono (Hi-MO 6)"], ["К-сть елементів", "132"], ["Напруга Vmp", "43.8 В"], ["Гарантія", "15/30 років"], ["Розміри", "2278×1134×30 мм"]], "inverter": [["Потужність", "10 кВт"], ["Фаза", "1"], ["Напруга", "48В (LV)"], ["MPPT", "2"], ["ККД", "97.6%"], ["Тип", "Гібридний"]], "akb": [["Ємність", "16 кВт·год"], ["Хімія", "LiFePO4"], ["Напруга", "51.2В / 314Ah"], ["Циклів заряду", "6000+"], ["Гарантія", "10 років"]]} },
+  { id:7, cat:"Стандарт", name:"СЕС Стандарт 10 кВт", price:323700, oldPrice:null, mountUAH:31800, img:null, imgSrc:KIT_IMG, badge:"new", rating:4.85, reviews:67, power:"10 кВт", warranty:"5 років", brand:"Sun Power UA", desc:"18×LONGi 615M + Deye SUN-10K гібрид LV + Deye SE-F16-С 16кВт·год. Курс $1=44.5₴, ціна орієнтовна.", panelName:"18×LONGi 615M", invName:"Deye SUN-10K гібрид LV", akbName:"Deye SE-F16-С 16кВт·год", kit:["Гібридний інвертор Deye SUN-10K LV","Сонячні панелі LONGi 615M загальною потужністю 10 кВт (18 шт.)","Акумуляторна батарея Deye SE-F16-С 16 кВт·год","Захисна автоматика","Кабельна продукція","Монтажні кріплення"], advantages:["Незалежність від відключень електроенергії","Економія на рахунках за світло","Віддалений моніторинг через мобільний додаток","Можливість масштабування системи","Гарантія на обладнання до 10 років"], specs:{"panel": [["Потужність", "615 Вт"], ["ККД", "22.5%"], ["Тип елементів", "HPBC Mono (Hi-MO 6)"], ["К-сть елементів", "132"], ["Напруга Vmp", "43.8 В"], ["Гарантія", "15/30 років"], ["Розміри", "2278×1134×30 мм"]], "inverter": [["Потужність", "10 кВт"], ["Фаза", "1"], ["Напруга", "48В (LV)"], ["MPPT", "2"], ["ККД", "97.6%"], ["Тип", "Гібридний"]], "akb": [["Ємність", "16 кВт·год"], ["Хімія", "LiFePO4"], ["Напруга", "51.2В / 314Ah"], ["Циклів заряду", "6000+"], ["Гарантія", "10 років"]]} },
   { id:8, cat:"Стандарт", name:"СЕС Стандарт 12 кВт", price:285900, oldPrice:null, mountUAH:26700, img:null, imgSrc:KIT_IMG, badge:"new", rating:4.7, reviews:74, power:"12 кВт", warranty:"5 років", brand:"Sun Power UA", desc:"17×LONGi 615M + Deye SUN-12K гібрид + АКБ 10кВт·год. Курс $1=44.5₴, ціна орієнтовна.", panelName:"17×LONGi 615M", invName:"Deye SUN-12K гібрид", akbName:"АКБ 10кВт·год", specs:{"panel": [["Потужність", "615 Вт"], ["ККД", "22.5%"], ["Тип елементів", "HPBC Mono (Hi-MO 6)"], ["К-сть елементів", "132"], ["Напруга Vmp", "43.8 В"], ["Гарантія", "15/30 років"], ["Розміри", "2278×1134×30 мм"]], "inverter": [["Потужність", "12 кВт"], ["Фаза", "1"], ["Напруга", "48В (LV)"], ["MPPT", "2"], ["ККД", "97.6%"], ["Тип", "Гібридний"]], "akb": [["Ємність", "10 кВт·год"], ["Хімія", "LiFePO4"], ["Напруга", "51.2В"], ["Циклів заряду", "6000+"]]} },
   { id:9, cat:"Стандарт", name:"СЕС Стандарт 15 кВт", price:337300, oldPrice:null, mountUAH:32000, img:null, imgSrc:KIT_IMG, badge:"new", rating:4.75, reviews:21, power:"15 кВт", warranty:"5 років", brand:"Sun Power UA", desc:"18×LONGi 610M + Deye SUN-15K-SG01LP3 LV + Deye SE-F16-С 16кВт·год. Курс $1=44.5₴, ціна орієнтовна.", panelName:"18×LONGi 610M", invName:"Deye SUN-15K-SG01LP3 LV", akbName:"Deye SE-F16-С 16кВт·год", specs:{"panel": [["Потужність", "610 Вт"], ["ККД", "22.5%"], ["Тип елементів", "Bifacial Mono"], ["Bifacial gain", "+5–10%"], ["Гарантія", "15/30 років"]], "inverter": [["Потужність", "15 кВт"], ["Фаза", "3"], ["Напруга", "48В (LV)"], ["MPPT", "2"], ["ККД", "97.6%"], ["Тип", "Гібридний"]], "akb": [["Ємність", "16 кВт·год"], ["Хімія", "LiFePO4"], ["Напруга", "51.2В / 314Ah"], ["Циклів заряду", "6000+"], ["Гарантія", "10 років"]]} },
   { id:10, cat:"Стандарт", name:"СЕС Стандарт 20 кВт", price:651200, oldPrice:null, mountUAH:53400, img:null, imgSrc:KIT_IMG, badge:"new", rating:4.8, reviews:28, power:"20 кВт", warranty:"5 років", brand:"Sun Power UA", desc:"36×LONGi 645M + Deye SUN-20K HP3 HV + Deye SE-F16-С ×3 48кВт·год. Курс $1=44.5₴, ціна орієнтовна.", panelName:"36×LONGi 645M", invName:"Deye SUN-20K HP3 HV", akbName:"Deye SE-F16-С ×3 48кВт·год", specs:{"panel": [["Потужність", "645 Вт"], ["ККД", "22.8%"], ["Тип елементів", "Bifacial TOPCon (Hi-MO 7)"], ["К-сть елементів", "144"], ["Напруга Vmp", "44.9 В"], ["Гарантія", "15/30 років"], ["Розміри", "2384×1303×35 мм"]], "inverter": [["Потужність", "20 кВт"], ["Фаза", "3"], ["Напруга", "150–850В (HV)"], ["MPPT", "2"], ["ККД", "98.4%"], ["Тип", "Гібридний"]], "akb": [["Ємність", "48 кВт·год (3 модулі)"], ["Хімія", "LiFePO4"], ["Напруга", "51.2В"], ["Циклів заряду", "6000+"], ["Гарантія", "10 років"]]} },
@@ -669,6 +669,7 @@ function Shop({ cart, setCart, products, onClose }) {
   const [wishlist, setWishlist] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [detail, setDetail] = useState(null);
+  const [detailTab, setDetailTab] = useState("opis");
   const [addedId, setAddedId] = useState(null);
   const [payStep, setPayStep] = useState(false);
   const [payMethod, setPayMethod] = useState("mono");
@@ -810,7 +811,7 @@ function Shop({ cart, setCart, products, onClose }) {
         <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,240px),1fr))",gap:18 }}>
           {filtered.map(p=>(
             <div key={p.id} className="product-card">
-              <div className="product-img" onClick={()=>setDetail(p)} style={{ position:"relative" }}>
+              <div className="product-img" onClick={()=>{ setDetail(p); setDetailTab("opis"); }} style={{ position:"relative" }}>
                 <ProductImage product={p} iconSize={44}/>
                 {p.badge==="new"&&<span style={{ position:"absolute",bottom:10,left:10,background:"#22C55E",color:"#fff",fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:100,letterSpacing:".04em",zIndex:2 }}>NEW</span>}
                 {p.badge==="sale"&&<span style={{ position:"absolute",bottom:10,left:10,background:"#EF4444",color:"#fff",fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:100,letterSpacing:".04em",zIndex:2 }}>SALE {p.oldPrice?`-${Math.round((1-p.price/p.oldPrice)*100)}%`:""}</span>}
@@ -820,7 +821,7 @@ function Shop({ cart, setCart, products, onClose }) {
               </button>
               <div style={{ padding:"14px" }}>
                 <div style={{ fontSize:10,fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",color:"#22C55E",marginBottom:4 }}>{p.cat} · {p.brand}</div>
-                <div onClick={()=>setDetail(p)} style={{ fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:14,lineHeight:1.3,marginBottom:7,cursor:"pointer" }}>{p.name}</div>
+                <div onClick={()=>{ setDetail(p); setDetailTab("opis"); }} style={{ fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:14,lineHeight:1.3,marginBottom:7,cursor:"pointer" }}>{p.name}</div>
                 <div style={{ display:"flex",alignItems:"center",gap:4,marginBottom:10 }}>
                   <div style={{ display:"flex",gap:1 }}>{[...Array(5)].map((_,i)=><Star key={i} size={10} fill={i<Math.floor(p.rating)?"#F5C518":"#E5E7EB"} color={i<Math.floor(p.rating)?"#F5C518":"#E5E7EB"}/>)}</div>
                   <span style={{ fontSize:11,color:"#555" }}>{p.rating} ({p.reviews})</span>
@@ -863,7 +864,7 @@ function Shop({ cart, setCart, products, onClose }) {
             </div>
             <button onClick={()=>setCartOpen(false)} style={{ background:"none",border:"none",cursor:"pointer",padding:6,color:"#555",display:"flex" }}><X size={19}/></button>
           </div>
-          <div style={{ flex:1,overflowY:"auto",padding:"14px" }}>
+          <div style={{ flex:1,overflowY:"auto",minHeight:0,padding:"14px" }}>
             {cart.length===0?(<div style={{ textAlign:"center",padding:"60px 24px" }}>
               {/* Іконка кошика з стрілкою вниз — як у Sanlarix */}
               <div style={{ marginBottom:20,display:"flex",justifyContent:"center" }}>
@@ -1064,18 +1065,70 @@ function Shop({ cart, setCart, products, onClose }) {
             <span style={{ fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:15 }}>Деталі товару</span>
             <button onClick={()=>setDetail(null)} style={{ background:"none",border:"none",cursor:"pointer",padding:6,color:"#555",display:"flex" }}><X size={19}/></button>
           </div>
-          <div style={{ flex:1,overflowY:"auto" }}>
+          <div style={{ flex:1,overflowY:"auto",minHeight:0 }}>
             <div style={{ aspectRatio:"16/9",overflow:"hidden" }}>
               <ProductImage product={detail} iconSize={56}/>
             </div>
             <div style={{ padding:"18px 20px" }}>
               <div style={{ fontSize:10,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",marginBottom:5 }}>{detail.cat} · {detail.brand}</div>
               <h3 style={{ marginBottom:8,lineHeight:1.3 }}>{detail.name}</h3>
-              <div style={{ display:"flex",alignItems:"center",gap:5,marginBottom:14 }}>
+              <div style={{ display:"flex",alignItems:"center",gap:5,marginBottom:16 }}>
                 <div style={{ display:"flex",gap:2 }}>{[...Array(5)].map((_,i)=><Star key={i} size={12} fill={i<Math.floor(detail.rating)?"#F5C518":"#E5E7EB"} color={i<Math.floor(detail.rating)?"#F5C518":"#E5E7EB"}/>)}</div>
                 <span style={{ fontSize:12,color:"#555" }}>{detail.rating} · {detail.reviews} відгуків</span>
               </div>
-              <p style={{ fontSize:13,color:"#555",lineHeight:1.75,marginBottom:18 }}>{detail.desc}</p>
+
+              {/* ══ ВКЛАДКИ: ОПИС / ХАРАКТЕРИСТИКИ ══ */}
+              <div style={{ display:"flex",gap:4,background:"#F5F5F5",borderRadius:100,padding:4,marginBottom:18 }}>
+                {[["opis","Опис"],["specs","Характеристики"]].map(([k,l])=>(
+                  <button key={k} onClick={()=>setDetailTab(k)}
+                    style={{ flex:1,padding:"8px 12px",borderRadius:100,border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontWeight:700,fontSize:12.5,transition:"all .2s",background:detailTab===k?"#fff":"transparent",color:detailTab===k?"#1A1A1A":"#777",boxShadow:detailTab===k?"0 2px 8px rgba(0,0,0,.08)":"none" }}>
+                    {l}
+                  </button>
+                ))}
+              </div>
+
+              {detailTab==="opis" && (<>
+              <p style={{ fontSize:13,color:"#555",lineHeight:1.75,marginBottom:6 }}>{detail.desc.replace(/\s*Курс\s*\$1=[\d.]+₴,?\s*ціна орієнтовна\.?/i,"")}</p>
+              {/Курс\s*\$1=[\d.]+₴/i.test(detail.desc) && (
+                <p style={{ fontSize:11,color:"#999",fontStyle:"italic",marginBottom:18 }}>
+                  {detail.desc.match(/Курс\s*\$1=[\d.]+₴,?\s*ціна орієнтовна\.?/i)?.[0]}
+                </p>
+              )}
+
+              {/* ══ КОМПЛЕКТАЦІЯ ══ */}
+              {detail.kit?.length>0 && (
+                <div style={{ marginBottom:20 }}>
+                  <div style={{ fontSize:10,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",marginBottom:10 }}>Комплектація</div>
+                  <div style={{ display:"flex",flexDirection:"column",gap:7 }}>
+                    {detail.kit.map((item,i)=>(
+                      <div key={i} style={{ display:"flex",alignItems:"flex-start",gap:8 }}>
+                        <span style={{ color:"#22C55E",fontSize:13,lineHeight:1.6 }}>•</span>
+                        <span style={{ fontSize:13,color:"#444",lineHeight:1.6 }}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ══ ПЕРЕВАГИ ══ */}
+              {detail.advantages?.length>0 && (
+                <div style={{ marginBottom:20 }}>
+                  <div style={{ fontSize:10,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",marginBottom:10 }}>Переваги</div>
+                  <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
+                    {detail.advantages.map((item,i)=>(
+                      <div key={i} style={{ display:"flex",alignItems:"flex-start",gap:8 }}>
+                        <div style={{ width:18,height:18,borderRadius:"50%",background:"rgba(34,197,94,.1)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1 }}>
+                          <Check size={11} color="#22C55E"/>
+                        </div>
+                        <span style={{ fontSize:13,color:"#444",lineHeight:1.6 }}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              </>)}
+
+              {detailTab==="specs" && (<>
               <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:20 }}>
                 {[detail.power&&["Потужність",detail.power],["Гарантія",detail.warranty],["Категорія",detail.cat],["Бренд",detail.brand]].filter(Boolean).map(([k,v])=>(
                   <div key={k} style={{ background:"#F5F5F5",borderRadius:10,padding:"9px 12px" }}>
@@ -1162,6 +1215,7 @@ function Shop({ cart, setCart, products, onClose }) {
                   )}
                 </div>
               )}
+              </>)}
               <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14 }}>
                 <div>
                   <div style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:detail.custom?20:26,color:detail.custom?"#22C55E":"#1A1A1A" }}>{detail.custom?"За проєктом":`${effectivePrice(detail).toLocaleString()} ₴`}</div>
@@ -2965,13 +3019,13 @@ function SunPowerUASite() {
               {[
                 { label:"Проєкти",    id:"projects"  },
                 { label:"Про нас",    id:"about"     },
-                { label:"Для дому",   id:"services"  },
-                { label:"Для бізнесу",id:"services"  },
+                { label:"Для дому",   id:"pricing", billing:"home"  },
+                { label:"Для бізнесу",id:"pricing", billing:"biz"   },
                 { label:"Замовлення", id:"shop"      },
                 { label:"Контакти",   id:"contact"   },
               ].map(l=>(
                 <button key={l.label}
-                  onClick={()=>{ if(l.id==="shop") setShopOpen(true); else if(l.id==="about") setAboutOpen(true); else scrollTo(l.id); }}
+                  onClick={()=>{ if(l.id==="shop") setShopOpen(true); else if(l.id==="about") setAboutOpen(true); else { if(l.billing) setBilling(l.billing); scrollTo(l.id); } }}
                   style={{ color:"rgba(255,255,255,.5)",fontSize:14,fontWeight:500,textDecoration:"underline",textUnderlineOffset:3,transition:"color .2s",background:"none",border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",padding:0 }}
                   onMouseEnter={e=>e.target.style.color="#22C55E"}
                   onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.5)"}>{l.label}</button>
@@ -3118,7 +3172,7 @@ function SunPowerUASite() {
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.11 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.13 1 .37 1.97.72 2.9a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.18-1.18a2 2 0 012.11-.45c.93.35 1.9.59 2.9.72A2 2 0 0122 16.92z"/></svg>
                 </div>
                 <div>
-                  <div style={{ fontSize:14,fontWeight:700,color:"#1A1A1A" }}>Звичайний дзвінок</div>
+                  <div style={{ fontSize:14,fontWeight:700,color:"#1A1A1A" }}>Зателефонувати</div>
                   <div style={{ fontSize:11,color:"#888" }}>Через мобільну мережу</div>
                 </div>
               </a>
