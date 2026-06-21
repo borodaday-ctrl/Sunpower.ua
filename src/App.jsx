@@ -304,6 +304,8 @@ h3{font-family:'Syne',sans-serif;font-size:clamp(15px,2vw,20px);font-weight:700;
 .project-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:all .4s cubic-bezier(.34,1.56,.64,1)}
 .project-card:hover{transform:translateY(-5px);box-shadow:0 20px 52px rgba(0,0,0,.14)}
 .partner-logo{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px 32px;display:flex;align-items:center;justify-content:center;transition:all .3s;height:90px}
+.brand-scroller{-ms-overflow-style:none;scrollbar-width:none}
+.brand-scroller::-webkit-scrollbar{display:none}
 /* Кнопки шапки: ефект наведення лише на пристроях з мишею (@media hover:hover),
    щоб на телефоні дотик не "застрягав" у підсвіченому стані назавжди */
 @media (hover:hover){
@@ -531,49 +533,49 @@ function Logo({ size = 48 }) {
   );
 }
 
-/* ══ СТРІЧКА БРЕНДІВ — тягнеться пальцем/мишкою в обидва боки,
-   автоматично прокручується сама, коли її ніхто не чіпає ══ */
+/* ══ СТРІЧКА БРЕНДІВ — на телефоні крутиться рідним скролом браузера (просто і надійно),
+   на комп'ютері можна тягнути мишкою; сама прокручується по колу, коли її не чіпають ══ */
 function BrandMarquee({ partners }) {
-  const DUPES = 10; // достатньо копій, щоб запас був з обох боків при перетягуванні
-  const trackRef = useRef(null);
-  const offsetRef = useRef(0);
-  const setWidthRef = useRef(0);
-  const initializedRef = useRef(false);
-  const draggingRef = useRef(false);
-  const dragStartXRef = useRef(0);
-  const dragStartOffsetRef = useRef(0);
+  const DUPES = 6; // копій достатньо для безшовного закільцювання
+  const scrollerRef = useRef(null);
+  const pausedRef = useRef(false);
+  const resumeTimerRef = useRef(null);
+  const mouseDownRef = useRef(false);
+  const mouseStartXRef = useRef(0);
+  const mouseStartScrollRef = useRef(0);
   const [grabbing, setGrabbing] = useState(false);
 
+  // Стартуємо з середини набору копій, щойно реальна ширина стане відомою
+  // (після завантаження картинок) — це дає запас прокрутки в обидва боки.
   useEffect(() => {
-    if (!trackRef.current) return;
-    const measure = () => {
-      if (!trackRef.current) return;
-      const w = trackRef.current.scrollWidth / DUPES;
+    const el = scrollerRef.current;
+    if (!el) return;
+    let inited = false;
+    const tryInit = () => {
+      if (inited) return;
+      const w = el.scrollWidth / DUPES;
       if (w <= 0) return;
-      setWidthRef.current = w;
-      if (!initializedRef.current) {
-        // перший раз, коли реально знаємо ширину (картинки завантажились) — центруємо стрічку
-        initializedRef.current = true;
-        offsetRef.current = -w * Math.floor(DUPES/2);
-        trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
-      }
+      inited = true;
+      el.scrollLeft = w * Math.floor(DUPES / 2);
     };
-    measure();
-    // ResizeObserver реагує, коли картинки довантажуються і стрічка змінює реальний розмір —
-    // на відміну від одноразового виміру при монтуванні, який міг впіймати ще не завантажені <img>
-    const ro = new ResizeObserver(measure);
-    ro.observe(trackRef.current);
-    window.addEventListener("resize", measure);
-    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
+    tryInit();
+    const ro = new ResizeObserver(tryInit);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
+  // Автопрокрутка по колу + безшовне закільцювання країв
   useEffect(() => {
     let raf;
     const tick = () => {
-      if (!draggingRef.current && setWidthRef.current > 0) {
-        offsetRef.current -= 0.45; // швидкість автопрокрутки
-        wrapOffset();
-        applyTransform();
+      const el = scrollerRef.current;
+      if (el && !pausedRef.current && !mouseDownRef.current) {
+        const w = el.scrollWidth / DUPES;
+        if (w > 0) {
+          el.scrollLeft += 0.6;
+          if (el.scrollLeft >= w * (DUPES - 1)) el.scrollLeft -= w;
+          else if (el.scrollLeft <= 0) el.scrollLeft += w;
+        }
       }
       raf = requestAnimationFrame(tick);
     };
@@ -581,49 +583,46 @@ function BrandMarquee({ partners }) {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const wrapOffset = () => {
-    const w = setWidthRef.current;
-    if (w <= 0) return;
-    const center = -w * Math.floor(DUPES/2);
-    // тримаємо позицію в межах одного "періоду" навколо центру — копій вистачає з обох боків
-    while (offsetRef.current < center - w) offsetRef.current += w;
-    while (offsetRef.current > center + w) offsetRef.current -= w;
+  const pause = () => {
+    pausedRef.current = true;
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+  };
+  const scheduleResume = () => {
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => { pausedRef.current = false; }, 1500);
   };
 
-  const applyTransform = () => {
-    if (trackRef.current) trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
+  // Перетягування мишкою (на тач-екранах рідний скрол спрацьовує сам по собі)
+  const onMouseDown = (e) => {
+    mouseDownRef.current = true; setGrabbing(true); pause();
+    mouseStartXRef.current = e.clientX;
+    mouseStartScrollRef.current = scrollerRef.current.scrollLeft;
   };
-
-  const onDown = (e) => {
-    draggingRef.current = true;
-    setGrabbing(true);
-    dragStartXRef.current = e.clientX;
-    dragStartOffsetRef.current = offsetRef.current;
-    e.currentTarget.setPointerCapture?.(e.pointerId);
+  const onMouseMove = (e) => {
+    if (!mouseDownRef.current || !scrollerRef.current) return;
+    scrollerRef.current.scrollLeft = mouseStartScrollRef.current - (e.clientX - mouseStartXRef.current);
   };
-  const onMove = (e) => {
-    if (!draggingRef.current) return;
-    offsetRef.current = dragStartOffsetRef.current + (e.clientX - dragStartXRef.current);
-    wrapOffset();
-    applyTransform();
+  const endMouseDrag = () => {
+    if (!mouseDownRef.current) return;
+    mouseDownRef.current = false; setGrabbing(false); scheduleResume();
   };
-  const endDrag = () => { draggingRef.current = false; setGrabbing(false); };
 
   return (
     <div
-      onPointerDown={onDown}
-      onPointerMove={onMove}
-      onPointerUp={endDrag}
-      onPointerLeave={endDrag}
-      onPointerCancel={endDrag}
-      style={{ overflow:"hidden", cursor:grabbing?"grabbing":"grab", touchAction:"pan-y", userSelect:"none" }}>
-      <div ref={trackRef} style={{ display:"flex", gap:42, width:"max-content", willChange:"transform" }}>
-        {Array.from({length:DUPES}).flatMap(()=>partners).map((b,i)=>(
-          <span key={i} style={{ display:"inline-flex",alignItems:"center" }}>
-            <img src={b.logoSrc} alt={b.name} style={{height:56,objectFit:"contain",maxWidth:220}} draggable={false}/>
-          </span>
-        ))}
-      </div>
+      ref={scrollerRef}
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={endMouseDrag}
+      onMouseLeave={endMouseDrag}
+      onTouchStart={pause}
+      onTouchEnd={scheduleResume}
+      className="brand-scroller"
+      style={{ display:"flex", gap:42, overflowX:"auto", WebkitOverflowScrolling:"touch", cursor:grabbing?"grabbing":"grab", userSelect:"none" }}>
+      {Array.from({length:DUPES}).flatMap(()=>partners).map((b,i)=>(
+        <span key={i} style={{ display:"inline-flex",alignItems:"center",flexShrink:0 }}>
+          <img src={b.logoSrc} alt={b.name} style={{height:56,objectFit:"contain",maxWidth:220}} draggable={false}/>
+        </span>
+      ))}
     </div>
   );
 }
