@@ -1114,10 +1114,14 @@ function SolarCalculator({ onOpenShop, products }) {
     return () => clearTimeout(t);
   }, [sendingTg]);
 
-  // Прокрутка до верху картки калькулятора при кожній зміні кроку —
+  // Прокрутка до верху картки калькулятора при зміні кроку —
   // без цього висота контенту різко змінюється (особливо на переході
   // до результату), і старий/новий крок на мить накладаються один на одного.
+  // ВАЖЛИВО: пропускаємо перший рендер (завантаження/оновлення сторінки) —
+  // інакше будь-яке оновлення сторінки одразу "телепортує" до калькулятора.
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return; }
     if (!calcCardRef.current) return;
     const t = setTimeout(() => {
       calcCardRef.current.scrollIntoView({ behavior:"smooth", block:"start" });
