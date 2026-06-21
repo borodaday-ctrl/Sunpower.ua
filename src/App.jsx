@@ -377,12 +377,15 @@ const PARTNERS = [
   { name:"JinKo Solar",  logoSrc:"/images/logo_jinkosolar.png" },
   { name:"JA Solar",     logoSrc:"/images/logo_jasolar.png" },
   { name:"Huawei",       logoSrc:"/images/logo_huawei.png" },
+  { name:"Trina Solar",  logoSrc:"/images/logo_trinasolar.png" },
+  { name:"Solis",        logoSrc:"/images/logo_solis.png" },
+  { name:"SolaX Power",  logoSrc:"/images/logo_solax.png" },
 ];
 
 const SERVICES = [
   { icon:"⚡", title:"Обладнання", desc:"Пропонуємо сонячні панелі, інвертори, акумулятори та комплектуючі від провідних світових брендів. Лише перевірені рішення з гарантією якості та професійною підтримкою.", price:"від 181 000 ₴" },
   { icon:"🌿", title:"Зелений тариф", desc:"Заробляйте на надлишках виробленої електроенергії. Допоможемо підібрати рішення, підготувати документи та максимально ефективно використовувати можливості зеленого тарифу.", price:"від 0 ₴" },
-  { icon:"🏭", title:"СЕС для бізнесу", desc:"Промислові станції від 50 кВт. Кредитування 5-7-9% для юридичних осіб. Термін до 5 років, до 150 млн грн.", price:"від 80 000 ₴" },
+  { icon:"🏭", title:"СЕС для бізнесу", desc:"Промислові станції від 50 кВт. Кредитування 5-7-9% для юридичних осіб. Термін до 5 років, до 150 млн грн.", price:"від 800 000 ₴" },
   { icon:"💳", title:"Кредит під 0%", desc:"Державна програма — кредит на сонячні панелі та електростанції для приватних осіб без переплат.", price:"0% річних" },
   { icon:"🔋", title:"Накопичення енергії", desc:"ESS системи для зберігання електроенергії. Продавайте надлишок у мережу у найвигідніші години.", price:"під ключ" },
   { icon:"📈", title:"Розширення СЕС", desc:"Збільшення потужності існуючої сонячної станції під ключ. Більше генерації — більше економії.", price:"під ключ" },
@@ -405,7 +408,7 @@ const STATS = [
 const PACKAGES = [
   { name:"Дім Старт", price:"від 181 000 ₴", desc:"Мережева 5–6 кВт", features:["10 панелей LONGi","Інвертор Huawei","Гарантія 5 років","Підключення до мережі","Базовий моніторинг"], hot:false },
   { name:"Дім Преміум", price:"від 317 000 ₴", desc:"Гібридна 10–15 кВт", features:["20 панелей LONGi Hi-MO 6","Гібридний інвертор","Акумулятор 10 кВт·год","Net-billing","Моніторинг 24/7","Гарантія 5 років"], hot:true },
-  { name:"Бізнес 5-7-9%", price:"від 80 000 ₴", desc:"Промислові від 50 кВт", features:["Потужність від 50 кВт","Кредит 5–9% річних","До 150 млн грн","Net-billing","Власний менеджер","Гарантія 5 років"], hot:false, dark:true },
+  { name:"Бізнес 5-7-9%", price:"від 800 000 ₴", desc:"Промислові від 50 кВт", features:["Потужність від 50 кВт","Кредит 5–9% річних","До 150 млн грн","Net-billing","Власний менеджер","Гарантія 5 років"], hot:false, dark:true },
 ];
 
 const TESTS = [
@@ -526,7 +529,7 @@ function useReveal() {
   const ref = useRef(null);
   useEffect(() => {
     const el = ref.current; if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if(e.isIntersecting){ el.classList.add("in"); obs.disconnect(); } }, { threshold:0.07, rootMargin:"0px 0px -40px 0px" });
+    const obs = new IntersectionObserver(([e]) => { if(e.isIntersecting){ el.classList.add("in"); obs.disconnect(); } }, { threshold:0.01, rootMargin:"0px 0px 250px 0px" });
     obs.observe(el); return () => obs.disconnect();
   }, []);
   return ref;
