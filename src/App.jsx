@@ -384,7 +384,7 @@ const PARTNERS = [
   { name:"JA Solar",     logoSrc:"/images/logo_jasolar.png" },
   { name:"Huawei",       logoSrc:"/images/logo_huawei.png" },
   { name:"Trina Solar",  logoSrc:"/images/logo_trinasolar_v2.png" },
-  { name:"Solis",        logoSrc:"/images/logo_solis_v2.png" },
+  { name:"Solis",        logoSrc:"/images/logo_solis_v3.png" },
   { name:"SolaX Power",  logoSrc:"/images/logo_solax_v2.png" },
 ];
 
@@ -538,23 +538,33 @@ function BrandMarquee({ partners }) {
   const trackRef = useRef(null);
   const offsetRef = useRef(0);
   const setWidthRef = useRef(0);
+  const initializedRef = useRef(false);
   const draggingRef = useRef(false);
   const dragStartXRef = useRef(0);
   const dragStartOffsetRef = useRef(0);
   const [grabbing, setGrabbing] = useState(false);
 
   useEffect(() => {
+    if (!trackRef.current) return;
     const measure = () => {
-      if (trackRef.current) {
-        const w = trackRef.current.scrollWidth / DUPES;
-        setWidthRef.current = w;
-        offsetRef.current = -w * Math.floor(DUPES/2); // стартуємо посередині — є запас в обидва боки
+      if (!trackRef.current) return;
+      const w = trackRef.current.scrollWidth / DUPES;
+      if (w <= 0) return;
+      setWidthRef.current = w;
+      if (!initializedRef.current) {
+        // перший раз, коли реально знаємо ширину (картинки завантажились) — центруємо стрічку
+        initializedRef.current = true;
+        offsetRef.current = -w * Math.floor(DUPES/2);
         trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
       }
     };
     measure();
+    // ResizeObserver реагує, коли картинки довантажуються і стрічка змінює реальний розмір —
+    // на відміну від одноразового виміру при монтуванні, який міг впіймати ще не завантажені <img>
+    const ro = new ResizeObserver(measure);
+    ro.observe(trackRef.current);
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
   }, []);
 
   useEffect(() => {
