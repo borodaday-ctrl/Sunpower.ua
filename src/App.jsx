@@ -391,12 +391,12 @@ const PARTNERS = [
 ];
 
 const SERVICES = [
-  { icon:"⚡", title:"Обладнання", desc:"Пропонуємо сонячні панелі, інвертори, акумулятори та комплектуючі від провідних світових брендів. Лише перевірені рішення з гарантією якості та професійною підтримкою.", price:"від 181 000 ₴" },
-  { icon:"🌿", title:"Зелений тариф", desc:"Заробляйте на надлишках виробленої електроенергії. Допоможемо підібрати рішення, підготувати документи та максимально ефективно використовувати можливості зеленого тарифу.", price:"від 0 ₴" },
-  { icon:"🏭", title:"СЕС для бізнесу", desc:"Промислові станції від 50 кВт. Кредитування 5-7-9% для юридичних осіб. Термін до 5 років, до 150 млн грн.", price:"від 800 000 ₴" },
-  { icon:"💳", title:"Кредит під 0%", desc:"Державна програма — кредит на сонячні панелі та електростанції для приватних осіб без переплат.", price:"0% річних" },
-  { icon:"🔋", title:"Накопичення енергії", desc:"ESS системи для зберігання електроенергії. Продавайте надлишок у мережу у найвигідніші години.", price:"під ключ" },
-  { icon:"📈", title:"Розширення СЕС", desc:"Збільшення потужності існуючої сонячної станції під ключ. Більше генерації — більше економії.", price:"під ключ" },
+  { icon:"⚡", title:"Обладнання", desc:"Пропонуємо сонячні панелі, інвертори, акумулятори та комплектуючі від провідних світових брендів. Лише перевірені рішення з гарантією якості та професійною підтримкою.", price:"від 181 000 ₴", link:"shop" },
+  { icon:"🌿", title:"Зелений тариф", desc:"Заробляйте на надлишках виробленої електроенергії. Допоможемо підібрати рішення, підготувати документи та максимально ефективно використовувати можливості зеленого тарифу.", price:"від 0 ₴", link:"contact" },
+  { icon:"🏭", title:"СЕС для бізнесу", desc:"Промислові станції від 50 кВт. Кредитування 5-7-9% для юридичних осіб. Термін до 5 років, до 150 млн грн.", price:"від 800 000 ₴", link:"contact" },
+  { icon:"💳", title:"Кредит під 0%", desc:"Державна програма — кредит на сонячні панелі та електростанції для приватних осіб без переплат.", price:"0% річних", link:"contact" },
+  { icon:"🔋", title:"Накопичення енергії", desc:"ESS системи для зберігання електроенергії. Продавайте надлишок у мережу у найвигідніші години.", price:"під ключ", link:"shop" },
+  { icon:"📈", title:"Розширення СЕС", desc:"Збільшення потужності існуючої сонячної станції під ключ. Більше генерації — більше економії.", price:"під ключ", link:"contact" },
 ];
 
 const STEPS = [
@@ -2506,16 +2506,16 @@ function SunPowerUASite() {
             <h2>Повний спектр рішень<br/><span style={{ background:"linear-gradient(135deg,#22C55E,#F5C518)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text" }}>для вашої енергонезалежності</span></h2>
             <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,marginTop:14 }}/>
           </div>
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,300px),1fr))",gap:16 }}>
+          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,300px),1fr))",gap:16,alignItems:"stretch" }}>
             {SERVICES.map((s,i)=>(
-              <div key={i} className="service-card">
+              <div key={i} className="service-card" style={{ display:"flex",flexDirection:"column",height:"100%" }}>
                 <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14 }}>
                   <div style={{ width:44,height:44,borderRadius:12,background:i%2===0?"rgba(34,197,94,.1)":"rgba(245,197,24,.1)",display:"flex",alignItems:"center",justifyContent:"center" }}><span style={{fontSize:20}}>{s.icon}</span></div>
                   <span style={{ fontSize:11,fontWeight:700,color:"#22C55E",background:"rgba(34,197,94,.08)",borderRadius:100,padding:"3px 10px" }}>{s.price}</span>
                 </div>
                 <h3 style={{ marginBottom:8 }}>{s.title}</h3>
                 <p style={{ color:"#555",fontSize:13,lineHeight:1.7,marginBottom:14 }}>{s.desc}</p>
-                <button className="btn-outline-green" style={{ padding:"7px 14px",fontSize:12 }} onClick={openConsult}>Детальніше <ArrowRight size={12}/></button>
+                <button className="btn-outline-green" style={{ padding:"7px 14px",fontSize:12,marginTop:"auto",alignSelf:"flex-start" }} onClick={()=>{ if (s.link==="shop") setShopOpen(true); else openConsult(); }}>Детальніше <ArrowRight size={12}/></button>
               </div>
             ))}
           </div>
@@ -2642,14 +2642,8 @@ function SunPowerUASite() {
             <h2 className="green-underline">ПАРТНЕРИ</h2>
             <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"12px auto 0" }}/>
           </div>
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:16 }}>
-            {PARTNERS.map((p,i)=>(
-              <div key={i} className="partner-logo" style={{display:"flex",alignItems:"center",justifyContent:"center"}}>
-                <img src={p.logoSrc} alt={p.name} style={{maxHeight:60,maxWidth:"85%",objectFit:"contain"}}/>
-              </div>
-            ))}
-          </div>
         </div>
+        <BrandMarquee partners={PARTNERS}/>
       </section>
 
       {/* ══ PACKAGES ══ */}
@@ -2769,37 +2763,39 @@ function SunPowerUASite() {
             <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"12px auto 0" }}/>
           </div>
           <div style={{ position:"relative" }}>
-            <div style={{ overflowX:"auto", WebkitOverflowScrolling:"touch" }}>
-              <table style={{ width:"100%",borderCollapse:"separate",borderSpacing:0,minWidth:440 }}>
-                <thead>
-                  <tr>
-                    {["Критерій","☀️ СЕС+АКБ","⚡ Генератор","🔌 Мережа"].map((h,i)=>(
-                      <th key={h} style={{ padding:"9px 10px",textAlign:i===0?"left":"center",fontSize:11.5,fontWeight:700,color:i===1?"#22C55E":"#555",background:i===1?"rgba(34,197,94,.06)":"#f9f9f9",borderBottom:"2px solid",borderBottomColor:i===1?"#22C55E":"#e5e7eb",fontFamily:"Syne,sans-serif",letterSpacing:".02em",whiteSpace:"nowrap" }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ["Вартість/міс","~0–350 ₴","800–3000 ₴","2000–5000 ₴"],
-                    ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
-                    ["Шум","✅ Безшумно","❌ Гучний","—"],
-                    ["Вихлоп/запах","✅ Немає","❌ Є","—"],
-                    ["Окупність","7–10 р (дім)","Ніколи","—"],
-                    ["Заробіток","✅ Зелений тариф","❌ Ні","❌ Ні"],
-                    ["Обслуговування","✅ Мінімальне","❌ Регулярне","—"],
-                    ["Гарантія","✅ 5–10 років","⚠️ 1–2 роки","—"],
-                  ].map(([cr,...vals],ri)=>(
-                    <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
-                      <td style={{ padding:"8px 10px",fontSize:12,color:"#333",fontWeight:600,borderBottom:"1px solid #f0f0f0",whiteSpace:"nowrap" }}>{cr}</td>
-                      {vals.map((v,vi)=>(
-                        <td key={vi} style={{ padding:"8px 10px",fontSize:12,textAlign:"center",color:vi===0?"#22C55E":v.startsWith("❌")?"#EF4444":"#555",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.03)":"transparent",borderBottom:"1px solid #f0f0f0",whiteSpace:"nowrap" }}>{v}</td>
+            <div style={{ border:"1px solid var(--border)",borderRadius:18,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,.05)" }}>
+              <div style={{ overflowX:"auto", WebkitOverflowScrolling:"touch" }}>
+                <table style={{ width:"100%",borderCollapse:"separate",borderSpacing:0,minWidth:460 }}>
+                  <thead>
+                    <tr>
+                      {["Критерій","☀️ СЕС+АКБ","⚡ Генератор","🔌 Мережа"].map((h,i)=>(
+                        <th key={h} style={{ padding:"13px 14px",textAlign:i===0?"left":"center",fontSize:12,fontWeight:700,color:i===1?"#fff":"#333",background:i===1?"#22C55E":"#f7f7f7",fontFamily:"Syne,sans-serif",letterSpacing:".02em",whiteSpace:"nowrap" }}>{h}</th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {[
+                      ["Вартість/міс","~0–350 ₴","800–3000 ₴","2000–5000 ₴"],
+                      ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
+                      ["Шум","✅ Безшумно","❌ Гучний","—"],
+                      ["Вихлоп/запах","✅ Немає","❌ Є","—"],
+                      ["Окупність","7–10 р (дім)","Ніколи","—"],
+                      ["Заробіток","✅ Зелений тариф","❌ Ні","❌ Ні"],
+                      ["Обслуговування","✅ Мінімальне","❌ Регулярне","—"],
+                      ["Гарантія","✅ 5–10 років","⚠️ 1–2 роки","—"],
+                    ].map(([cr,...vals],ri,arr)=>(
+                      <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
+                        <td style={{ padding:"10px 14px",fontSize:12.5,color:"#333",fontWeight:600,borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{cr}</td>
+                        {vals.map((v,vi)=>(
+                          <td key={vi} style={{ padding:"10px 14px",fontSize:12.5,textAlign:"center",color:vi===0?"#16A34A":v.startsWith("❌")?"#EF4444":"#555",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.05)":"transparent",borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{v}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div style={{ textAlign:"center",fontSize:11,color:"#999",marginTop:8 }}>← гортайте таблицю пальцем →</div>
+            <div style={{ textAlign:"center",fontSize:11,color:"#999",marginTop:10 }}>← гортайте таблицю пальцем →</div>
           </div>
           <p style={{ textAlign:"center",fontSize:12,color:"#aaa",marginTop:16 }}>* Розрахунок для будинку 5 кВт·год/день, тариф 4.32 ₴/кВт·год</p>
         </div>
