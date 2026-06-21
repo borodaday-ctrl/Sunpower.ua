@@ -260,7 +260,6 @@ img{display:block;max-width:100%}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-@keyframes marqueeBrands{0%{transform:translateX(0)}100%{transform:translateX(-16.6667%)}}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
 @keyframes slowBlink{0%,100%{background:#22C55E;box-shadow:0 8px 28px rgba(34,197,94,.35)}50%{background:#F5C518;box-shadow:0 8px 28px rgba(245,197,24,.5)}}
 @keyframes cartBlink{0%,49%{background:#F5C518;box-shadow:0 0 16px rgba(245,197,24,.6);border-color:#F5C518}50%,100%{background:transparent;box-shadow:none;border-color:rgba(255,255,255,.18)}}
@@ -384,9 +383,9 @@ const PARTNERS = [
   { name:"JinKo Solar",  logoSrc:"/images/logo_jinkosolar.png" },
   { name:"JA Solar",     logoSrc:"/images/logo_jasolar.png" },
   { name:"Huawei",       logoSrc:"/images/logo_huawei.png" },
-  { name:"Trina Solar",  logoSrc:"/images/logo_trinasolar.png" },
-  { name:"Solis",        logoSrc:"/images/logo_solis.png" },
-  { name:"SolaX Power",  logoSrc:"/images/logo_solax.png" },
+  { name:"Trina Solar",  logoSrc:"/images/logo_trinasolar_v2.png" },
+  { name:"Solis",        logoSrc:"/images/logo_solis_v2.png" },
+  { name:"SolaX Power",  logoSrc:"/images/logo_solax_v2.png" },
 ];
 
 const SERVICES = [
@@ -529,6 +528,93 @@ function Logo({ size = 48 }) {
       <line x1="68" y1="30" x2="64" y2="34" stroke="#F5C518" strokeWidth="2.5" strokeLinecap="round"/>
       <line x1="72" y1="44" x2="66" y2="44" stroke="#F5C518" strokeWidth="2.5" strokeLinecap="round"/>
     </svg>
+  );
+}
+
+/* ══ СТРІЧКА БРЕНДІВ — тягнеться пальцем/мишкою в обидва боки,
+   автоматично прокручується сама, коли її ніхто не чіпає ══ */
+function BrandMarquee({ partners }) {
+  const DUPES = 10; // достатньо копій, щоб запас був з обох боків при перетягуванні
+  const trackRef = useRef(null);
+  const offsetRef = useRef(0);
+  const setWidthRef = useRef(0);
+  const draggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragStartOffsetRef = useRef(0);
+  const [grabbing, setGrabbing] = useState(false);
+
+  useEffect(() => {
+    const measure = () => {
+      if (trackRef.current) {
+        const w = trackRef.current.scrollWidth / DUPES;
+        setWidthRef.current = w;
+        offsetRef.current = -w * Math.floor(DUPES/2); // стартуємо посередині — є запас в обидва боки
+        trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
+      }
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  useEffect(() => {
+    let raf;
+    const tick = () => {
+      if (!draggingRef.current && setWidthRef.current > 0) {
+        offsetRef.current -= 0.45; // швидкість автопрокрутки
+        wrapOffset();
+        applyTransform();
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  const wrapOffset = () => {
+    const w = setWidthRef.current;
+    if (w <= 0) return;
+    const center = -w * Math.floor(DUPES/2);
+    // тримаємо позицію в межах одного "періоду" навколо центру — копій вистачає з обох боків
+    while (offsetRef.current < center - w) offsetRef.current += w;
+    while (offsetRef.current > center + w) offsetRef.current -= w;
+  };
+
+  const applyTransform = () => {
+    if (trackRef.current) trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
+  };
+
+  const onDown = (e) => {
+    draggingRef.current = true;
+    setGrabbing(true);
+    dragStartXRef.current = e.clientX;
+    dragStartOffsetRef.current = offsetRef.current;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+  const onMove = (e) => {
+    if (!draggingRef.current) return;
+    offsetRef.current = dragStartOffsetRef.current + (e.clientX - dragStartXRef.current);
+    wrapOffset();
+    applyTransform();
+  };
+  const endDrag = () => { draggingRef.current = false; setGrabbing(false); };
+
+  return (
+    <div
+      onPointerDown={onDown}
+      onPointerMove={onMove}
+      onPointerUp={endDrag}
+      onPointerLeave={endDrag}
+      onPointerCancel={endDrag}
+      style={{ overflow:"hidden", cursor:grabbing?"grabbing":"grab", touchAction:"pan-y", userSelect:"none" }}>
+      <div ref={trackRef} style={{ display:"flex", gap:42, width:"max-content", willChange:"transform" }}>
+        {Array.from({length:DUPES}).flatMap(()=>partners).map((b,i)=>(
+          <span key={i} style={{ display:"inline-flex",alignItems:"center" }}>
+            <img src={b.logoSrc} alt={b.name} style={{height:56,objectFit:"contain",maxWidth:220}} draggable={false}/>
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -2361,18 +2447,10 @@ function SunPowerUASite() {
         </div>
       </section>
 
-      {/* ══ LOGOS MARQUEE ══ */}
-      <section style={{ padding:"30px 0",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",background:"#fff",overflow:"hidden" }}>
-        <p style={{ textAlign:"center",fontSize:10,fontWeight:600,letterSpacing:".1em",textTransform:"uppercase",color:"#555",opacity:.5,marginBottom:12 }}>НАДІЙНЕ ОБЛАДНАННЯ СВІТОВИХ БРЕНДІВ</p>
-        <div style={{ overflow:"hidden" }}>
-          <div style={{ display:"flex",gap:50,animation:"marqueeBrands 32s linear infinite",width:"max-content" }}>
-            {[...PARTNERS,...PARTNERS,...PARTNERS,...PARTNERS,...PARTNERS,...PARTNERS].map((b,i)=>(
-              <span key={i} style={{ display:"inline-flex",alignItems:"center",opacity:1,cursor:"default" }}>
-                <img src={b.logoSrc} alt={b.name} style={{height:32,objectFit:"contain",maxWidth:160}}/>
-              </span>
-            ))}
-          </div>
-        </div>
+      {/* ══ LOGOS MARQUEE (інтерактивна — тягнеться пальцем/мишкою в обидва боки) ══ */}
+      <section style={{ padding:"16px 0",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",background:"#fff",overflow:"hidden" }}>
+        <p style={{ textAlign:"center",fontSize:9,fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",color:"#555",opacity:.5,marginBottom:6 }}>НАДІЙНЕ ОБЛАДНАННЯ СВІТОВИХ БРЕНДІВ</p>
+        <BrandMarquee partners={PARTNERS}/>
       </section>
 
       {/* ══ CALCULATOR ══ */}
@@ -2682,18 +2760,18 @@ function SunPowerUASite() {
             <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"12px auto 0" }}/>
           </div>
           <div style={{ position:"relative" }}>
-            <div style={{ overflowX:"auto", WebkitOverflowScrolling:"touch", touchAction:"pan-x" }}>
-              <table style={{ width:"100%",borderCollapse:"separate",borderSpacing:0,minWidth:560 }}>
+            <div style={{ overflowX:"auto", WebkitOverflowScrolling:"touch" }}>
+              <table style={{ width:"100%",borderCollapse:"separate",borderSpacing:0,minWidth:440 }}>
                 <thead>
                   <tr>
-                    {["Критерій","☀️ СЕС + АКБ","⚡ Генератор","🔌 Лише мережа"].map((h,i)=>(
-                      <th key={h} style={{ padding:"12px 16px",textAlign:i===0?"left":"center",fontSize:12,fontWeight:700,color:i===1?"#22C55E":"#555",background:i===1?"rgba(34,197,94,.06)":"#f9f9f9",borderBottom:"2px solid",borderBottomColor:i===1?"#22C55E":"#e5e7eb",fontFamily:"Syne,sans-serif",letterSpacing:".04em",whiteSpace:"nowrap" }}>{h}</th>
+                    {["Критерій","☀️ СЕС+АКБ","⚡ Генератор","🔌 Мережа"].map((h,i)=>(
+                      <th key={h} style={{ padding:"9px 10px",textAlign:i===0?"left":"center",fontSize:11.5,fontWeight:700,color:i===1?"#22C55E":"#555",background:i===1?"rgba(34,197,94,.06)":"#f9f9f9",borderBottom:"2px solid",borderBottomColor:i===1?"#22C55E":"#e5e7eb",fontFamily:"Syne,sans-serif",letterSpacing:".02em",whiteSpace:"nowrap" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {[
-                    ["Вартість/міс","~0–350 ₴","800–3000 ₴ (паливо)","2000–5000 ₴"],
+                    ["Вартість/міс","~0–350 ₴","800–3000 ₴","2000–5000 ₴"],
                     ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
                     ["Шум","✅ Безшумно","❌ Гучний","—"],
                     ["Вихлоп/запах","✅ Немає","❌ Є","—"],
@@ -2703,16 +2781,15 @@ function SunPowerUASite() {
                     ["Гарантія","✅ 5–10 років","⚠️ 1–2 роки","—"],
                   ].map(([cr,...vals],ri)=>(
                     <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
-                      <td style={{ padding:"11px 16px",fontSize:13,color:"#333",fontWeight:600,borderBottom:"1px solid #f0f0f0",whiteSpace:"nowrap" }}>{cr}</td>
+                      <td style={{ padding:"8px 10px",fontSize:12,color:"#333",fontWeight:600,borderBottom:"1px solid #f0f0f0",whiteSpace:"nowrap" }}>{cr}</td>
                       {vals.map((v,vi)=>(
-                        <td key={vi} style={{ padding:"11px 16px",fontSize:13,textAlign:"center",color:vi===0?"#22C55E":v.startsWith("❌")?"#EF4444":"#555",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.03)":"transparent",borderBottom:"1px solid #f0f0f0",whiteSpace:"nowrap" }}>{v}</td>
+                        <td key={vi} style={{ padding:"8px 10px",fontSize:12,textAlign:"center",color:vi===0?"#22C55E":v.startsWith("❌")?"#EF4444":"#555",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.03)":"transparent",borderBottom:"1px solid #f0f0f0",whiteSpace:"nowrap" }}>{v}</td>
                       ))}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <div style={{ position:"absolute",top:0,right:0,bottom:0,width:28,background:"linear-gradient(90deg,transparent,#fff)",pointerEvents:"none" }}/>
             <div style={{ textAlign:"center",fontSize:11,color:"#999",marginTop:8 }}>← гортайте таблицю пальцем →</div>
           </div>
           <p style={{ textAlign:"center",fontSize:12,color:"#aaa",marginTop:16 }}>* Розрахунок для будинку 5 кВт·год/день, тариф 4.32 ₴/кВт·год</p>
