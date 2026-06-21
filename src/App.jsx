@@ -305,6 +305,13 @@ h3{font-family:'Syne',sans-serif;font-size:clamp(15px,2vw,20px);font-weight:700;
 .project-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:all .4s cubic-bezier(.34,1.56,.64,1)}
 .project-card:hover{transform:translateY(-5px);box-shadow:0 20px 52px rgba(0,0,0,.14)}
 .partner-logo{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px 32px;display:flex;align-items:center;justify-content:center;transition:all .3s;height:90px}
+/* Кнопки шапки: ефект наведення лише на пристроях з мишею (@media hover:hover),
+   щоб на телефоні дотик не "застрягав" у підсвіченому стані назавжди */
+@media (hover:hover){
+  .navicon-search:hover{background:#F5C518 !important;color:#1E6B2E !important;border-color:#F5C518 !important}
+  .navicon-wish:hover{border-color:#22C55E !important;background:rgba(34,197,94,.08) !important}
+  .navicon-cart:hover{background:#F5C518 !important;color:#1E6B2E !important;border-color:#F5C518 !important;animation-play-state:paused}
+}
 .partner-logo:hover{box-shadow:0 8px 28px rgba(34,197,94,.15);border-color:rgba(34,197,94,.3);transform:scale(1.04)}
 
 /* SHOP */
@@ -406,9 +413,9 @@ const STATS = [
 ];
 
 const PACKAGES = [
-  { name:"Дім Старт", price:"від 181 000 ₴", desc:"Мережева 5–6 кВт", features:["10 панелей LONGi","Інвертор Huawei","Гарантія 5 років","Підключення до мережі","Базовий моніторинг"], hot:false },
-  { name:"Дім Преміум", price:"від 317 000 ₴", desc:"Гібридна 10–15 кВт", features:["20 панелей LONGi Hi-MO 6","Гібридний інвертор","Акумулятор 10 кВт·год","Net-billing","Моніторинг 24/7","Гарантія 5 років"], hot:true },
-  { name:"Бізнес 5-7-9%", price:"від 800 000 ₴", desc:"Промислові від 50 кВт", features:["Потужність від 50 кВт","Кредит 5–9% річних","До 150 млн грн","Net-billing","Власний менеджер","Гарантія 5 років"], hot:false, dark:true },
+  { name:"Дім Старт", price:"від 181 000 ₴", desc:"Мережева 5–6 кВт", features:["10 панелей LONGi","Інвертор Huawei","Гарантія 5 років","Підключення до мережі","Базовий моніторинг"], hot:false, color:"#22C55E", emoji:"🏠", tag:"Базовий" },
+  { name:"Дім Преміум", price:"від 317 000 ₴", desc:"Гібридна 10–15 кВт", features:["20 панелей LONGi Hi-MO 6","Гібридний інвертор","Акумулятор 10 кВт·год","Net-billing","Моніторинг 24/7","Гарантія 5 років"], hot:true, color:"#22C55E", emoji:"⭐", tag:"Популярний" },
+  { name:"Бізнес 5-7-9%", price:"від 800 000 ₴", desc:"Промислові від 50 кВт", features:["Потужність від 50 кВт","Кредит 5–9% річних","До 150 млн грн","Net-billing","Власний менеджер","Гарантія 5 років"], hot:false, dark:true, color:"#F5C518", emoji:"🏭", tag:"Для бізнесу" },
 ];
 
 const TESTS = [
@@ -2109,9 +2116,8 @@ function SunPowerUASite() {
           {/* 🔍 Пошук */}
           <button
             onClick={()=>{ setSearchQuery(""); setSearchOpen(true); }}
+            className="navicon-search"
             style={{ width:48,height:48,borderRadius:14,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .35s",background:"transparent",color:scrolled?"#333":"#fff",flexShrink:0 }}
-            onMouseEnter={e=>{ e.currentTarget.style.background="#F5C518"; e.currentTarget.style.color="#1E6B2E"; e.currentTarget.style.borderColor="#F5C518"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.color=scrolled?"#333":"#fff"; e.currentTarget.style.borderColor=scrolled?"rgba(0,0,0,.12)":"rgba(255,255,255,.18)"; }}
             aria-label="Пошук">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -2125,9 +2131,8 @@ function SunPowerUASite() {
               if (last === today) { setWishError("Ви вже залишали побажання сьогодні. Повертайтесь завтра! 🌞"); setWishOpen(true); return; }
               setWishError(""); setWishText(""); setWishContact(""); setWishSent(false); setWishOpen(true);
             }}
+            className="navicon-wish"
             style={{ width:48,height:48,borderRadius:14,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:2,flexShrink:0,background:"transparent",cursor:"pointer",transition:"all .25s" }}
-            onMouseEnter={e=>{ e.currentTarget.style.borderColor="#22C55E"; e.currentTarget.style.background="rgba(34,197,94,.08)"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.borderColor=scrolled?"rgba(0,0,0,.12)":"rgba(255,255,255,.18)"; e.currentTarget.style.background="transparent"; }}
             title="Залишити побажання">
             <MessageCircle size={17} color={scrolled?"#1A1A1A":"#fff"}/>
           </button>
@@ -2135,9 +2140,8 @@ function SunPowerUASite() {
           {/* 🛒 Кошик */}
           <button
             onClick={()=>setShopOpen(true)}
+            className="navicon-cart"
             style={{ width:48,height:48,borderRadius:14,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .35s",background:"transparent",color:scrolled?"#333":"#fff",position:"relative",flexShrink:0,animation:"orderBlink 4s ease-in-out infinite" }}
-            onMouseEnter={e=>{ e.currentTarget.style.animationPlayState="paused"; e.currentTarget.style.background="#F5C518"; e.currentTarget.style.color="#1E6B2E"; e.currentTarget.style.borderColor="#F5C518"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.animationPlayState="running"; e.currentTarget.style.background="transparent"; e.currentTarget.style.color=scrolled?"#333":"#fff"; e.currentTarget.style.borderColor=scrolled?"rgba(0,0,0,.12)":"rgba(255,255,255,.18)"; }}
             aria-label="Кошик">
             {cartCount === 0 ? (
               <svg viewBox="0 0 110 95" width="30" height="26" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
@@ -2363,9 +2367,7 @@ function SunPowerUASite() {
         <div style={{ overflow:"hidden" }}>
           <div style={{ display:"flex",gap:50,animation:"marqueeBrands 32s linear infinite",width:"max-content" }}>
             {[...PARTNERS,...PARTNERS,...PARTNERS,...PARTNERS,...PARTNERS,...PARTNERS].map((b,i)=>(
-              <span key={i} style={{ display:"inline-flex",alignItems:"center",opacity:.65,transition:"all .3s",cursor:"default" }}
-                onMouseEnter={e=>{ e.currentTarget.style.opacity="1"; e.currentTarget.style.transform="scale(1.06)"; }}
-                onMouseLeave={e=>{ e.currentTarget.style.opacity=".65"; e.currentTarget.style.transform="scale(1)"; }}>
+              <span key={i} style={{ display:"inline-flex",alignItems:"center",opacity:1,cursor:"default" }}>
                 <img src={b.logoSrc} alt={b.name} style={{height:32,objectFit:"contain",maxWidth:160}}/>
               </span>
             ))}
@@ -2679,35 +2681,39 @@ function SunPowerUASite() {
             <h2>СЕС проти альтернатив</h2>
             <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"12px auto 0" }}/>
           </div>
-          <div style={{ overflowX:"auto" }}>
-            <table style={{ width:"100%",borderCollapse:"separate",borderSpacing:0,minWidth:480 }}>
-              <thead>
-                <tr>
-                  {["Критерій","☀️ СЕС + АКБ","⚡ Генератор","🔌 Лише мережа"].map((h,i)=>(
-                    <th key={h} style={{ padding:"12px 16px",textAlign:i===0?"left":"center",fontSize:12,fontWeight:700,color:i===1?"#22C55E":"#555",background:i===1?"rgba(34,197,94,.06)":"#f9f9f9",borderBottom:"2px solid",borderBottomColor:i===1?"#22C55E":"#e5e7eb",fontFamily:"Syne,sans-serif",letterSpacing:".04em" }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["Вартість/міс","~0–350 ₴","800–3000 ₴ (паливо)","2000–5000 ₴"],
-                  ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
-                  ["Шум","✅ Безшумно","❌ Гучний","—"],
-                  ["Вихлоп/запах","✅ Немає","❌ Є","—"],
-                  ["Окупність","7–10 р (дім)","Ніколи","—"],
-                  ["Заробіток","✅ Зелений тариф","❌ Ні","❌ Ні"],
-                  ["Обслуговування","✅ Мінімальне","❌ Регулярне","—"],
-                  ["Гарантія","✅ 5–10 років","⚠️ 1–2 роки","—"],
-                ].map(([cr,...vals],ri)=>(
-                  <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
-                    <td style={{ padding:"11px 16px",fontSize:13,color:"#333",fontWeight:600,borderBottom:"1px solid #f0f0f0" }}>{cr}</td>
-                    {vals.map((v,vi)=>(
-                      <td key={vi} style={{ padding:"11px 16px",fontSize:13,textAlign:"center",color:vi===0?"#22C55E":v.startsWith("❌")?"#EF4444":"#555",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.03)":"transparent",borderBottom:"1px solid #f0f0f0" }}>{v}</td>
+          <div style={{ position:"relative" }}>
+            <div style={{ overflowX:"auto", WebkitOverflowScrolling:"touch", touchAction:"pan-x" }}>
+              <table style={{ width:"100%",borderCollapse:"separate",borderSpacing:0,minWidth:560 }}>
+                <thead>
+                  <tr>
+                    {["Критерій","☀️ СЕС + АКБ","⚡ Генератор","🔌 Лише мережа"].map((h,i)=>(
+                      <th key={h} style={{ padding:"12px 16px",textAlign:i===0?"left":"center",fontSize:12,fontWeight:700,color:i===1?"#22C55E":"#555",background:i===1?"rgba(34,197,94,.06)":"#f9f9f9",borderBottom:"2px solid",borderBottomColor:i===1?"#22C55E":"#e5e7eb",fontFamily:"Syne,sans-serif",letterSpacing:".04em",whiteSpace:"nowrap" }}>{h}</th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {[
+                    ["Вартість/міс","~0–350 ₴","800–3000 ₴ (паливо)","2000–5000 ₴"],
+                    ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
+                    ["Шум","✅ Безшумно","❌ Гучний","—"],
+                    ["Вихлоп/запах","✅ Немає","❌ Є","—"],
+                    ["Окупність","7–10 р (дім)","Ніколи","—"],
+                    ["Заробіток","✅ Зелений тариф","❌ Ні","❌ Ні"],
+                    ["Обслуговування","✅ Мінімальне","❌ Регулярне","—"],
+                    ["Гарантія","✅ 5–10 років","⚠️ 1–2 роки","—"],
+                  ].map(([cr,...vals],ri)=>(
+                    <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
+                      <td style={{ padding:"11px 16px",fontSize:13,color:"#333",fontWeight:600,borderBottom:"1px solid #f0f0f0",whiteSpace:"nowrap" }}>{cr}</td>
+                      {vals.map((v,vi)=>(
+                        <td key={vi} style={{ padding:"11px 16px",fontSize:13,textAlign:"center",color:vi===0?"#22C55E":v.startsWith("❌")?"#EF4444":"#555",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.03)":"transparent",borderBottom:"1px solid #f0f0f0",whiteSpace:"nowrap" }}>{v}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div style={{ position:"absolute",top:0,right:0,bottom:0,width:28,background:"linear-gradient(90deg,transparent,#fff)",pointerEvents:"none" }}/>
+            <div style={{ textAlign:"center",fontSize:11,color:"#999",marginTop:8 }}>← гортайте таблицю пальцем →</div>
           </div>
           <p style={{ textAlign:"center",fontSize:12,color:"#aaa",marginTop:16 }}>* Розрахунок для будинку 5 кВт·год/день, тариф 4.32 ₴/кВт·год</p>
         </div>
