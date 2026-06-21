@@ -270,7 +270,7 @@ img{display:block;max-width:100%}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes carouselSlide{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
 
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+.reveal{opacity:1;transform:none}
 .reveal.in{opacity:1;transform:translateY(0)}
 .container{max-width:1200px;margin:0 auto;padding:0 clamp(14px,4vw,64px)}
 .section{padding:clamp(32px,5vw,72px) 0}
@@ -1093,6 +1093,7 @@ function SolarCalculator({ onOpenShop, products }) {
   /* ══ РЕЖИМ: null = вибір, "quick" = 3 питання, "precise" = 12 питань ══ */
   const [mode, setMode] = useState(null);
   const [step, setStep] = useState(1);
+  const calcCardRef = useRef(null);
   const [data, setData] = useState({
     type:"", bill:"", credit:false, businessSystem:"hybrid",
     nightLoad:null, peopleHome:null, orientation:null, roofType:null,
@@ -1112,6 +1113,17 @@ function SolarCalculator({ onOpenShop, products }) {
     const t = setTimeout(() => setSendingSlow(true), 2000);
     return () => clearTimeout(t);
   }, [sendingTg]);
+
+  // Прокрутка до верху картки калькулятора при кожній зміні кроку —
+  // без цього висота контенту різко змінюється (особливо на переході
+  // до результату), і старий/новий крок на мить накладаються один на одного.
+  useEffect(() => {
+    if (!calcCardRef.current) return;
+    const t = setTimeout(() => {
+      calcCardRef.current.scrollIntoView({ behavior:"smooth", block:"start" });
+    }, 30);
+    return () => clearTimeout(t);
+  }, [step]);
 
   /* ══ КОНСТАНТИ ТАРИФІВ (нетбілінг 2026) ══ */
   const RETAIL = 4.32;           // ₴/кВт·год — повний роздрібний тариф
@@ -1329,7 +1341,7 @@ function SolarCalculator({ onOpenShop, products }) {
   };
 
   return (
-    <div style={{ maxWidth:480, margin:"0 auto" }}>
+    <div ref={calcCardRef} style={{ maxWidth:480, margin:"0 auto" }}>
       <div style={{ background:"rgba(255,255,255,.04)", borderRadius:24, padding:"clamp(20px,4vw,32px)", border:"1px solid rgba(255,255,255,.08)" }}>
 
         {/* ══ ВИБІР РЕЖИМУ ══ */}
