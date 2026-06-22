@@ -2809,50 +2809,54 @@ function SunPowerUASite() {
       </section>
 
       {/* ══ ПОРІВНЯЛЬНА ТАБЛИЦЯ: СЕС vs Генератор vs Мережа ══ */}
-      <section style={{ background:"#0F1A0F",padding:"clamp(32px,6vw,80px) 0" }}>
+      <section style={{ background:"#fff",padding:"clamp(32px,6vw,80px) 0" }}>
         <div className="container">
-          <div style={{ textAlign:"center",marginBottom:40 }}>
+          <div style={{ textAlign:"center",marginBottom:32 }}>
             <span style={{ fontSize:11,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",display:"block",marginBottom:10 }}>ПОРІВНЯННЯ</span>
-            <h2 style={{ color:"#fff",marginBottom:12 }}>СЕС проти альтернатив</h2>
-            <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"0 auto" }}/>
+            <h2>СЕС проти альтернатив</h2>
+            <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"12px auto 0" }}/>
           </div>
-          <div style={{ overflowX:"auto", WebkitOverflowScrolling:"touch",borderRadius:20,overflow:"hidden" }}>
-            <table style={{ width:"100%",borderCollapse:"collapse",minWidth:380 }}>
-              <thead>
-                <tr>
-                  {[
-                    { label:"Критерій", bg:"#1A2A1A", color:"rgba(255,255,255,.45)" },
-                    { label:"☀️ СЕС+АКБ", bg:"#22C55E", color:"#fff" },
-                    { label:"⚡ Генератор", bg:"#1F2F1F", color:"rgba(255,255,255,.6)" },
-                    { label:"🔌 Мережа", bg:"#1F2F1F", color:"rgba(255,255,255,.6)" },
-                  ].map((h,i)=>(
-                    <th key={h.label} style={{ padding:"16px 20px",textAlign:i===0?"left":"center",fontSize:13,fontWeight:700,color:h.color,background:h.bg,fontFamily:"Syne,sans-serif",letterSpacing:".03em" }}>{h.label}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["Вартість/міс","~0–350 ₴","800–3000 ₴","2000–5000 ₴"],
-                  ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
-                  ["Шум","✅ Безшумно","❌ Гучний","—"],
-                  ["Вихлоп/запах","✅ Немає","❌ Є","—"],
-                  ["Окупність","7–10 р (дім)","Ніколи","—"],
-                  ["Заробіток","✅ Зелений тариф","❌ Ні","❌ Ні"],
-                  ["Обслуговування","✅ Мінімальне","❌ Регулярне","—"],
-                  ["Гарантія","✅ 5–10 років","⚠️ 1–2 роки","—"],
-                ].map(([cr,...vals],ri,arr)=>(
-                  <tr key={cr} style={{ background:ri%2===0?"#111D11":"#0F1A0F" }}>
-                    <td style={{ padding:"14px 20px",fontSize:13,color:"rgba(255,255,255,.7)",fontWeight:600,borderBottom:ri<arr.length-1?"1px solid rgba(255,255,255,.06)":"none" }}>{cr}</td>
-                    {vals.map((v,vi)=>(
-                      <td key={vi} style={{ padding:"14px 20px",fontSize:13,textAlign:"center",color:vi===0?"#4ADE80":v.startsWith("❌")?"#F87171":"rgba(255,255,255,.4)",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.08)":"transparent",borderBottom:ri<arr.length-1?"1px solid rgba(255,255,255,.06)":"none" }}>{v}</td>
+          <div style={{ position:"relative" }}>
+            <div style={{ border:"1px solid var(--border)",borderRadius:18,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,.05)" }}>
+              <div style={{ overflowX:"auto",WebkitOverflowScrolling:"touch" }}>
+                <table style={{ width:"100%",borderCollapse:"separate",borderSpacing:0,minWidth:400 }}>
+                  <thead>
+                    <tr>
+                      {[
+                        { label:"Критерій", bg:"#f7f7f7", color:"#333" },
+                        { label:"☀️ СЕС+АКБ", bg:"#22C55E", color:"#fff" },
+                        { label:"⚡ Генератор", bg:"#f7f7f7", color:"#555" },
+                        { label:"🔌 Мережа", bg:"#f7f7f7", color:"#555" },
+                      ].map((h,i)=>(
+                        <th key={h.label} style={{ padding:"13px 14px",textAlign:i===0?"left":"center",fontSize:12,fontWeight:700,color:h.color,background:h.bg,fontFamily:"Syne,sans-serif",letterSpacing:".02em",whiteSpace:"nowrap" }}>{h.label}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ["Вартість/міс","~0–350 ₴","800–3000 ₴","2000–5000 ₴"],
+                      ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
+                      ["Шум","✅ Безшумно","❌ Гучний","—"],
+                      ["Вихлоп/запах","✅ Немає","❌ Є","—"],
+                      ["Окупність","7–10 р (дім)","Ніколи","—"],
+                      ["Заробіток","✅ Зелений тариф","❌ Ні","❌ Ні"],
+                      ["Обслуговування","✅ Мінімальне","❌ Регулярне","—"],
+                      ["Гарантія","✅ 5–10 років","⚠️ 1–2 роки","—"],
+                    ].map(([cr,...vals],ri,arr)=>(
+                      <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
+                        <td style={{ padding:"11px 14px",fontSize:13,color:"#333",fontWeight:600,borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{cr}</td>
+                        {vals.map((v,vi)=>(
+                          <td key={vi} style={{ padding:"11px 14px",fontSize:13,textAlign:"center",color:vi===0?"#16A34A":v.startsWith("❌")?"#EF4444":"#555",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.04)":"transparent",borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{v}</td>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="show-mobile" style={{ textAlign:"center",fontSize:11,color:"#999",marginTop:10 }}>← гортайте таблицю пальцем →</div>
           </div>
-          <div className="show-mobile" style={{ textAlign:"center",fontSize:11,color:"rgba(255,255,255,.3)",marginTop:10 }}>← гортайте пальцем →</div>
-          <p style={{ textAlign:"center",fontSize:12,color:"rgba(255,255,255,.25)",marginTop:16 }}>* Розрахунок для будинку 5 кВт·год/день, тариф 4.32 ₴/кВт·год</p>
+          <p style={{ textAlign:"center",fontSize:12,color:"#aaa",marginTop:16 }}>* Розрахунок для будинку 5 кВт·год/день, тариф 4.32 ₴/кВт·год</p>
         </div>
       </section>
 
