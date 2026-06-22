@@ -304,8 +304,11 @@ h3{font-family:'Syne',sans-serif;font-size:clamp(15px,2vw,20px);font-weight:700;
 .project-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:all .4s cubic-bezier(.34,1.56,.64,1)}
 .project-card:hover{transform:translateY(-5px);box-shadow:0 20px 52px rgba(0,0,0,.14)}
 .partner-logo{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px 32px;display:flex;align-items:center;justify-content:center;transition:all .3s;height:90px}
-.brand-scroller{-ms-overflow-style:none;scrollbar-width:none}
+.brand-scroller{-ms-overflow-style:none;scrollbar-width:none;height:72px;display:flex;align-items:center}
 .brand-scroller::-webkit-scrollbar{display:none}
+/* Резервуємо місце під секції що рендеряться поза першим екраном —
+   браузер більше не «стрибає» коли вони з'являються при скролі */
+.section{content-visibility:auto;contain-intrinsic-size:0 400px}
 /* Кнопки шапки: ефект наведення лише на пристроях з мишею (@media hover:hover),
    щоб на телефоні дотик не "застрягав" у підсвіченому стані назавжди */
 @media (hover:hover){
@@ -1513,7 +1516,7 @@ function SolarCalculator({ onOpenShop, products }) {
             <p style={{color:"rgba(255,255,255,.4)",fontSize:13,marginBottom:18}}>Швидко — орієнтовно. Точно — детальніше</p>
             <div style={{display:"flex",flexDirection:"column",gap:10}}>
               <button onClick={()=>{ setMode("quick"); setStep(1); }}
-                style={{background:"rgba(34,197,94,.08)",border:"1.5px solid rgba(34,197,94,.3)",borderRadius:16,padding:"18px",cursor:"pointer",textAlign:"left",color:"#fff"}}>
+                style={{background:"rgba(34,197,94,.08)",border:"1.5px solid rgba(34,197,94,.3)",borderRadius:16,padding:"18px",cursor:"pointer",textAlign:"left",color:"#fff",minHeight:90}}>
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
                   <span style={{fontSize:24}}>⚡</span>
                   <span style={{fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:16}}>Швидко</span>
@@ -1521,7 +1524,7 @@ function SolarCalculator({ onOpenShop, products }) {
                 <p style={{fontSize:12,color:"rgba(255,255,255,.5)",margin:0}}>3 запитання · ~20 секунд · орієнтовний результат</p>
               </button>
               <button onClick={()=>{ setMode("precise"); setStep(1); }}
-                style={{background:"rgba(245,197,24,.08)",border:"1.5px solid rgba(245,197,24,.3)",borderRadius:16,padding:"18px",cursor:"pointer",textAlign:"left",color:"#fff"}}>
+                style={{background:"rgba(245,197,24,.08)",border:"1.5px solid rgba(245,197,24,.3)",borderRadius:16,padding:"18px",cursor:"pointer",textAlign:"left",color:"#fff",minHeight:90}}>
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
                   <span style={{fontSize:24}}>🎯</span>
                   <span style={{fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:16}}>Точно</span>
@@ -2511,7 +2514,7 @@ function SunPowerUASite() {
       </section>
 
       {/* ══ LOGOS MARQUEE (інтерактивна — тягнеться пальцем/мишкою в обидва боки) ══ */}
-      <section style={{ padding:"16px 0",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",background:"#fff",overflow:"hidden" }}>
+      <section style={{ padding:"10px 0",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",background:"#fff",overflow:"hidden",minHeight:100,display:"flex",flexDirection:"column",justifyContent:"center" }}>
         <p style={{ textAlign:"center",fontSize:9,fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",color:"#555",opacity:.5,marginBottom:6 }}>НАДІЙНЕ ОБЛАДНАННЯ СВІТОВИХ БРЕНДІВ</p>
         <BrandMarquee partners={PARTNERS}/>
       </section>
