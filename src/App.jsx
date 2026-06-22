@@ -306,9 +306,6 @@ h3{font-family:'Syne',sans-serif;font-size:clamp(15px,2vw,20px);font-weight:700;
 .partner-logo{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px 32px;display:flex;align-items:center;justify-content:center;transition:all .3s;height:90px}
 .brand-scroller{-ms-overflow-style:none;scrollbar-width:none;height:72px;display:flex;align-items:center}
 .brand-scroller::-webkit-scrollbar{display:none}
-/* Резервуємо місце під секції що рендеряться поза першим екраном —
-   браузер більше не «стрибає» коли вони з'являються при скролі */
-.section{content-visibility:auto;contain-intrinsic-size:0 400px}
 /* Кнопки шапки: ефект наведення лише на пристроях з мишею (@media hover:hover),
    щоб на телефоні дотик не "застрягав" у підсвіченому стані назавжди */
 @media (hover:hover){
@@ -3169,59 +3166,54 @@ function SunPowerUASite() {
 
       {/* ══ МОДАЛКА ВИБОРУ СПОСОБУ ЗВ'ЯЗКУ ══ */}
       {contactOpen && (
-        <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.6)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(4px)" }}
+        <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:9999,display:"flex",alignItems:"flex-end",justifyContent:"center",padding:0,backdropFilter:"blur(8px)" }}
           onClick={e=>{ if(e.target===e.currentTarget) setContactOpen(false); }}>
-          <div style={{ background:"#fff",borderRadius:24,padding:28,maxWidth:340,width:"100%",position:"relative",boxShadow:"0 32px 80px rgba(0,0,0,.3)" }}>
-            <button onClick={()=>setContactOpen(false)} style={{ position:"absolute",top:14,right:14,background:"rgba(0,0,0,.07)",border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }}>
-              <X size={16} color="#555"/>
+          <div style={{ background:"#0F1A0F",borderRadius:"24px 24px 0 0",padding:"28px 24px 40px",width:"100%",maxWidth:480,position:"relative",boxShadow:"0 -8px 40px rgba(0,0,0,.5)" }}>
+            {/* Ручка */}
+            <div style={{ width:40,height:4,background:"rgba(255,255,255,.15)",borderRadius:2,margin:"0 auto 24px" }}/>
+            <button onClick={()=>setContactOpen(false)} style={{ position:"absolute",top:16,right:16,background:"rgba(255,255,255,.08)",border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }}>
+              <X size={15} color="rgba(255,255,255,.6)"/>
             </button>
-            <div style={{ textAlign:"center",marginBottom:22 }}>
-              <div style={{ fontSize:36,marginBottom:8 }}>📞</div>
-              <h3 style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:18,marginBottom:6 }}>Як зв'язатися?</h3>
-              <p style={{ color:"#888",fontSize:13 }}>+38 (096) 203 38 39</p>
+            {/* Заголовок */}
+            <div style={{ marginBottom:24 }}>
+              <h3 style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:20,color:"#fff",marginBottom:4 }}>Зв'язатися з нами</h3>
+              <p style={{ color:"rgba(255,255,255,.4)",fontSize:13 }}>+38 (096) 203 38 39</p>
             </div>
             <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
-              {/* Власна мережа (звичайний дзвінок) */}
+              {/* Зателефонувати */}
               <a href="tel:+380962033839" onClick={()=>setContactOpen(false)}
-                style={{ display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderRadius:14,background:"rgba(34,197,94,.08)",border:"1.5px solid rgba(34,197,94,.25)",textDecoration:"none",transition:"all .2s" }}
-                onMouseEnter={e=>e.currentTarget.style.background="rgba(34,197,94,.14)"}
-                onMouseLeave={e=>e.currentTarget.style.background="rgba(34,197,94,.08)"}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#22C55E",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                style={{ display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderRadius:14,background:"rgba(34,197,94,.1)",border:"1px solid rgba(34,197,94,.2)",textDecoration:"none" }}>
+                <div style={{ width:44,height:44,borderRadius:12,background:"#22C55E",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.11 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.13 1 .37 1.97.72 2.9a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.18-1.18a2 2 0 012.11-.45c.93.35 1.9.59 2.9.72A2 2 0 0122 16.92z"/></svg>
                 </div>
                 <div>
-                  <div style={{ fontSize:14,fontWeight:700,color:"#1A1A1A" }}>Зателефонувати</div>
-                  <div style={{ fontSize:11,color:"#888" }}>Через мобільну мережу</div>
+                  <div style={{ fontSize:15,fontWeight:700,color:"#fff" }}>Зателефонувати</div>
+                  <div style={{ fontSize:12,color:"rgba(255,255,255,.4)",marginTop:1 }}>Через мобільну мережу</div>
                 </div>
               </a>
               {/* Viber */}
               <a href="viber://chat?number=%2B380962033839" onClick={()=>setContactOpen(false)}
-                style={{ display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderRadius:14,background:"rgba(115,96,242,.08)",border:"1.5px solid rgba(115,96,242,.25)",textDecoration:"none",transition:"all .2s" }}
-                onMouseEnter={e=>e.currentTarget.style.background="rgba(115,96,242,.14)"}
-                onMouseLeave={e=>e.currentTarget.style.background="rgba(115,96,242,.08)"}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#7360F2",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                style={{ display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderRadius:14,background:"rgba(115,96,242,.1)",border:"1px solid rgba(115,96,242,.2)",textDecoration:"none" }}>
+                <div style={{ width:44,height:44,borderRadius:12,background:"#7360F2",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M11.4 1.1C7.4 1.4 4.1 3.7 2.7 7c-.7 1.7-.9 3-.8 5.3.1 1.9.4 3.1 1.1 4.5 1.2 2.4 3.3 4.3 5.8 5.2l.7.3v1.8c0 1.9 0 1.8.3 1.8.1 0 1-.8 2.1-1.7l1.9-1.7h1.1c2.5-.1 4.4-.7 6.1-2 .8-.6 2-2 2.6-3.1.8-1.6 1.1-3 1.1-5.1-.1-2.8-.9-5-2.5-6.8C20.4 3 18.2 1.8 15.5 1.3c-.9-.2-3.3-.3-4.1-.2zm4.2 4.4c.3.1.4.2.4.4v.5l-.4.1c-.3.1-.4 0-.7-.4-.7-.9-1.8-1.3-3.4-1.3-1.3 0-2.2.3-3 .9-.9.7-1.4 1.8-1.5 3.2v.5l-.4.1-.4.1v-.6C6 7 6.5 5.7 7.5 4.8 8.7 3.8 10.1 3.4 12 3.4c1.6 0 2.8.4 3.6 1.1zm-7.5 2c.9-.5 2-.7 3.3-.5 1 .2 1.8.6 2.4 1.3.5.5.8 1.1.8 1.4 0 .4-.5.5-.9.3-.2-.1-.3-.3-.6-.7-.6-.8-1.4-1.2-2.6-1.2-.8 0-1.5.2-2 .6-.3.2-.4.2-.6.1-.3-.2-.3-.9 0-1.1l.2-.2zm4 2.7c.6.3 1 .9 1 1.5 0 .3-.1.5-.3.6l-.3.2-.4-.2c-.2-.2-.3-.3-.3-.6 0-.5-.4-.9-.9-.9-.3 0-.4-.1-.5-.3-.1-.3 0-.5.2-.7.4-.3.9-.1 1.5.4zm-5.5.5c.2.5.8 1 1.4 1.4.3.2.5.4.5.5 0 .2-.4.7-.6.7-.4 0-1.6-1.1-2-1.8-.2-.5-.2-.6 0-.9.2-.2.4-.2.7.1zm4.2 1.1c.4.1.8.5 1.2 1.1l.3.5.5.1c.5.1.6.2.6.5 0 .2-.1.3-.3.4-.3.2-.5.1-1-.3-.3-.3-.6-.5-.7-.5s-.3.2-.5.4c-.4.5-.6.5-.9.3-.3-.2-.3-.5 0-.9.3-.5.5-.6 1-.6l.5-.1-.3-.5c-.3-.6-.3-.8 0-1 .1-.1.3 0 .6.1zm-2.2 3.1c1.4.6 2.4 1 3.6 1 .6 0 .7.1.7.4 0 .3-.1.4-.7.5-1 .1-2.2-.2-3.9-.9-.9-.4-1-.4-1-.7 0-.2.1-.4.3-.4.1-.1.5.1 1 .1z"/></svg>
                 </div>
                 <div>
-                  <div style={{ fontSize:14,fontWeight:700,color:"#1A1A1A" }}>Viber</div>
-                  <div style={{ fontSize:11,color:"#888" }}>Написати повідомлення</div>
+                  <div style={{ fontSize:15,fontWeight:700,color:"#fff" }}>Viber</div>
+                  <div style={{ fontSize:12,color:"rgba(255,255,255,.4)",marginTop:1 }}>Написати повідомлення</div>
                 </div>
               </a>
               {/* WhatsApp */}
               <a href="https://wa.me/380962033839" target="_blank" rel="noopener noreferrer" onClick={()=>setContactOpen(false)}
-                style={{ display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderRadius:14,background:"rgba(37,211,102,.08)",border:"1.5px solid rgba(37,211,102,.25)",textDecoration:"none",transition:"all .2s" }}
-                onMouseEnter={e=>e.currentTarget.style.background="rgba(37,211,102,.14)"}
-                onMouseLeave={e=>e.currentTarget.style.background="rgba(37,211,102,.08)"}>
-                <div style={{ width:40,height:40,borderRadius:12,background:"#25D366",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+                style={{ display:"flex",alignItems:"center",gap:14,padding:"14px 16px",borderRadius:14,background:"rgba(37,211,102,.1)",border:"1px solid rgba(37,211,102,.2)",textDecoration:"none" }}>
+                <div style={{ width:44,height:44,borderRadius:12,background:"#25D366",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 </div>
                 <div>
-                  <div style={{ fontSize:14,fontWeight:700,color:"#1A1A1A" }}>WhatsApp</div>
-                  <div style={{ fontSize:11,color:"#888" }}>Написати повідомлення</div>
+                  <div style={{ fontSize:15,fontWeight:700,color:"#fff" }}>WhatsApp</div>
+                  <div style={{ fontSize:12,color:"rgba(255,255,255,.4)",marginTop:1 }}>Написати повідомлення</div>
                 </div>
               </a>
             </div>
-            <p style={{ textAlign:"center",fontSize:11,color:"#bbb",marginTop:16 }}>Якщо дзвінок не відкривається — спробуйте Viber або WhatsApp</p>
           </div>
         </div>
       )}
