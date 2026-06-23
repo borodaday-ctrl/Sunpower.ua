@@ -2996,21 +2996,32 @@ function SunPowerUASite() {
 
       {/* ══ FOOTER ══ */}
       <footer style={{ background:"#2A2A2A",padding:"clamp(40px,6vw,70px) 0 0" }}>
+        <style>{`
+          @media(max-width:640px){
+            .footer-grid{display:flex!important;flex-direction:column;align-items:center;text-align:center;gap:32px}
+            .footer-col1{align-items:center!important}
+            .footer-col2 p,.footer-col3 p{text-align:center}
+            .footer-col2 div{align-items:center}
+            .footer-nav{flex-direction:row!important;flex-wrap:wrap;justify-content:center;gap:8px 16px!important}
+            .footer-nav button{font-size:13px!important}
+            .footer-social{justify-content:center}
+            .footer-social a{width:44px!important;height:44px!important;border-radius:50%!important}
+          }
+        `}</style>
         <div className="container">
-          {/* ══ Десктоп: три колонки | Мобільний: одна колонка ══ */}
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,220px),1fr))",gap:40,paddingBottom:40,borderBottom:"1px solid rgba(255,255,255,.08)" }}>
+          <div className="footer-grid" style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,220px),1fr))",gap:40,paddingBottom:40,borderBottom:"1px solid rgba(255,255,255,.08)" }}>
 
             {/* Колонка 1 — Лого + опис */}
-            <div style={{ display:"flex",flexDirection:"column",alignItems:"flex-start",gap:16 }}>
+            <div className="footer-col1" style={{ display:"flex",flexDirection:"column",alignItems:"flex-start",gap:16 }}>
               <img src={REAL_LOGO} alt="Sun.Power.Ua" style={{ height:80,width:80,objectFit:"contain" }}/>
               <p style={{ color:"rgba(255,255,255,.45)",fontSize:13,lineHeight:1.7,margin:0 }}>Сонячні електростанції під ключ. Проєктування, монтаж та гарантійне обслуговування.</p>
               <p style={{ color:"rgba(255,255,255,.3)",fontSize:12,margin:0 }}>м. Вараш, вул. Комунальна 7</p>
             </div>
 
             {/* Колонка 2 — Навігація */}
-            <div>
+            <div className="footer-col2">
               <p style={{ color:"rgba(255,255,255,.35)",fontSize:10,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",marginBottom:16 }}>НАВІГАЦІЯ</p>
-              <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+              <div className="footer-nav" style={{ display:"flex",flexDirection:"column",gap:10 }}>
                 {[
                   { label:"Проєкти",    id:"projects"  },
                   { label:"Про нас",    id:"about"     },
@@ -3021,7 +3032,7 @@ function SunPowerUASite() {
                 ].map(l=>(
                   <button key={l.label}
                     onClick={()=>{ if(l.id==="shop") setShopOpen(true); else if(l.id==="about") setAboutOpen(true); else { if(l.billing) setBilling(l.billing); scrollTo(l.id); } }}
-                    style={{ color:"rgba(255,255,255,.55)",fontSize:14,fontWeight:500,textDecoration:"none",transition:"color .2s",background:"none",border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",padding:0,textAlign:"left" }}
+                    style={{ color:"rgba(255,255,255,.55)",fontSize:14,fontWeight:500,transition:"color .2s",background:"none",border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",padding:0,textAlign:"left" }}
                     onMouseEnter={e=>e.target.style.color="#22C55E"}
                     onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.55)"}>{l.label}</button>
                 ))}
@@ -3029,9 +3040,9 @@ function SunPowerUASite() {
             </div>
 
             {/* Колонка 3 — Соцмережі + контакти */}
-            <div>
+            <div className="footer-col3">
               <p style={{ color:"rgba(255,255,255,.35)",fontSize:10,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",marginBottom:16 }}>МИ В СОЦМЕРЕЖАХ</p>
-              <div style={{ display:"flex",flexWrap:"wrap",gap:12,marginBottom:20 }}>
+              <div className="footer-social" style={{ display:"flex",flexWrap:"wrap",gap:12,marginBottom:20 }}>
                 {[
                   { label:"Instagram", url:"https://www.instagram.com/sun.powerua?igsh=MW9ucmUzeGZvd2M0dA==", path:"M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" },
                   { label:"Facebook", url:"https://www.facebook.com/profile.php?id=61587772408533", path:"M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" },
@@ -3053,12 +3064,12 @@ function SunPowerUASite() {
 
           {/* Bottom */}
           <div style={{ padding:"20px 0 78px",display:"flex",flexWrap:"wrap",gap:12,justifyContent:"space-between",alignItems:"center" }}>
-            <span style={{ fontSize:11,color:"rgba(255,255,255,.3)" }}>© 2025 Sun.Power.Ua</span>
+            <span style={{ fontSize:11,color:"rgba(255,255,255,.3)" }}>© 2025 Sun.Power.Ua · м. Вараш, вул. Комунальна 7</span>
             <div style={{ display:"flex",gap:16 }}>
               {["Політика конфіденційності","Публічна оферта"].map(l=>(
                 <button key={l}
                   onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}
-                  style={{ color:"rgba(255,255,255,.25)",fontSize:11,textDecoration:"none",background:"none",border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",padding:0,transition:"color .2s" }}
+                  style={{ color:"rgba(255,255,255,.25)",fontSize:11,background:"none",border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",padding:0,transition:"color .2s" }}
                   onMouseEnter={e=>e.target.style.color="rgba(255,255,255,.6)"}
                   onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.25)"}>{l}</button>
               ))}
