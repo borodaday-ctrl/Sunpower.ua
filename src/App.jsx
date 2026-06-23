@@ -247,6 +247,7 @@ img{display:block;max-width:100%}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:#F5F5F5}
 ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#22C55E,#F5C518);border-radius:3px}
+*,*::before,*::after{box-sizing:border-box}
 :root{
   --g1:#22C55E; --g2:#16A34A; --g3:#14532D;
   --y1:#F5C518; --y2:#EAB308;
@@ -271,10 +272,10 @@ img{display:block;max-width:100%}
 
 .reveal{opacity:1;transform:none}
 .reveal.in{opacity:1;transform:translateY(0)}
-.container{max-width:1200px;margin:0 auto;padding:0 clamp(14px,4vw,64px)}
-.section{padding:clamp(32px,5vw,72px) 0}
+.container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,64px);box-sizing:border-box}
+.section{padding:clamp(32px,5vw,72px) 0;width:100%;box-sizing:border-box}
 
-h1{font-family:'Syne',sans-serif;font-size:clamp(34px,7vw,84px);font-weight:800;line-height:1.0;letter-spacing:-.03em}
+h1{font-family:'Syne',sans-serif;font-size:clamp(28px,6vw,72px);font-weight:800;line-height:1.05;letter-spacing:-.03em}
 h2{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,46px);font-weight:700;letter-spacing:-.02em;line-height:1.1}
 h3{font-family:'Syne',sans-serif;font-size:clamp(15px,2vw,20px);font-weight:700;letter-spacing:-.01em}
 
@@ -323,7 +324,7 @@ h3{font-family:'Syne',sans-serif;font-size:clamp(15px,2vw,20px);font-weight:700;
 .product-img{overflow:hidden;aspect-ratio:4/3;background:#F0F0EC}
 .product-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
 .cart-panel{position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);background:#fff;z-index:500;box-shadow:-16px 0 48px rgba(0,0,0,.14);display:flex;flex-direction:column;animation:slideIn .35s cubic-bezier(.16,1,.3,1)}
-.cart-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:9998;background:#1A1A1A;borderRadius:16px;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:toastIn .35s cubic-bezier(.16,1,.3,1);white-space:nowrap}
+.cart-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:9998;background:#1A1A1A;border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:toastIn .35s cubic-bezier(.16,1,.3,1);white-space:nowrap}
 @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .cart-overlay{position:fixed;inset:0;z-index:499;background:rgba(0,0,0,.4);animation:fadeIn .2s ease}
 .qty-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
@@ -2270,7 +2271,7 @@ function SunPowerUASite() {
 
       {/* ══ HEADER — 3 іконки по центру ══ */}
       <header style={{ position:"fixed",top:0,left:0,right:0,zIndex:100, background:scrolled?"rgba(255,255,255,.98)":"rgba(10,10,6,.88)", backdropFilter:"blur(18px)", borderBottom:scrolled?"2px solid #22C55E":"1px solid rgba(255,255,255,.08)", transition:"all .4s cubic-bezier(.16,1,.3,1)", boxShadow:scrolled?"0 2px 16px rgba(34,197,94,.12)":"none", padding:scrolled?"2px 0":"0" }}>
-        <div style={{ maxWidth:1200,margin:"0 auto",padding:"0 clamp(10px,3vw,48px)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"clamp(6px,2vw,16px)",height:scrolled?56:72,transition:"height .35s cubic-bezier(.16,1,.3,1)" }}>
+        <div style={{ maxWidth:1200,margin:"0 auto",padding:"0 clamp(12px,3vw,40px)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"clamp(8px,2vw,14px)",height:scrolled?56:64,transition:"height .35s cubic-bezier(.16,1,.3,1)" }}>
 
           {/* 🔰 Лого */}
           <div onClick={()=>setAboutOpen(true)} className="navbar-logo-btn" style={{ cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center" }}>
@@ -2491,7 +2492,7 @@ function SunPowerUASite() {
           <div style={{ position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(8,8,6,.94) 0%,rgba(8,8,6,.68) 55%,rgba(8,8,6,.84) 100%)" }}/>
         </div>
         <div style={{ position:"absolute",right:"-6%",top:"10%",width:500,height:500,background:"radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 68%)",pointerEvents:"none" }}/>
-        <div className="container" style={{ position:"relative",zIndex:1,paddingTop:110,paddingBottom:80 }}>
+        <div className="container" style={{ position:"relative",zIndex:1,paddingTop:"clamp(80px,12vw,110px)",paddingBottom:"clamp(40px,6vw,80px)" }}>
           <div style={{ maxWidth:800 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(34,197,94,.1)",border:"1px solid rgba(34,197,94,.22)",borderRadius:100,padding:"7px 15px",marginBottom:26,animation:"fadeUp .6s cubic-bezier(.16,1,.3,1) both" }}>
               <span style={{ width:7,height:7,borderRadius:"50%",background:"#22C55E",display:"block",animation:"pulse 2s ease-in-out infinite" }}/>
@@ -2540,7 +2541,7 @@ function SunPowerUASite() {
       </section>
 
       {/* ══ LOGOS MARQUEE (інтерактивна — тягнеться пальцем/мишкою в обидва боки) ══ */}
-      <section style={{ padding:"10px 0",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",background:"#fff",overflow:"hidden",minHeight:100,display:"flex",flexDirection:"column",justifyContent:"center" }}>
+      <section style={{ padding:"10px 0",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",background:"#fff",minHeight:100,display:"flex",flexDirection:"column",justifyContent:"center" }}>
         <p style={{ textAlign:"center",fontSize:9,fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",color:"var(--sub)",opacity:.5,marginBottom:6 }}>НАДІЙНЕ ОБЛАДНАННЯ СВІТОВИХ БРЕНДІВ</p>
         <BrandMarquee partners={PARTNERS}/>
       </section>
