@@ -241,6 +241,7 @@ const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+html{overflow-x:hidden}
 body{font-family:'DM Sans',sans-serif;background:#F5F5F5;color:#1A1A1A;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 img{display:block;max-width:100%}
 ::selection{background:rgba(34,197,94,.2);color:#1A1A1A}
@@ -2464,7 +2465,7 @@ function SunPowerUASite() {
           <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1920&q=90" alt="СЕС Sun Power UA" loading="eager" decoding="async" style={{ width:"100%",height:"115%",objectFit:"cover",objectPosition:"center bottom" }}/>
           <div style={{ position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(8,8,6,.94) 0%,rgba(8,8,6,.68) 55%,rgba(8,8,6,.84) 100%)" }}/>
         </div>
-        <div style={{ position:"absolute",right:"-6%",top:"10%",width:500,height:500,background:"radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 68%)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:0,top:"10%",width:"min(500px,90vw)",height:"min(500px,90vw)",background:"radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 68%)",pointerEvents:"none" }}/>
         <div className="container" style={{ position:"relative",zIndex:1,paddingTop:110,paddingBottom:80 }}>
           <div style={{ maxWidth:800 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(34,197,94,.1)",border:"1px solid rgba(34,197,94,.22)",borderRadius:100,padding:"7px 15px",marginBottom:26,animation:"fadeUp .6s cubic-bezier(.16,1,.3,1) both" }}>
@@ -2521,8 +2522,8 @@ function SunPowerUASite() {
 
       {/* ══ CALCULATOR ══ */}
       <section id="calculator" style={{ background:"#0A0A08", padding:"clamp(28px,5vw,72px) 0 clamp(80px,12vw,120px)", position:"relative", overflow:"hidden" }}>
-        <div style={{ position:"absolute",right:"-10%",top:"5%",width:400,height:400,background:"radial-gradient(circle,rgba(34,197,94,.08) 0%,transparent 70%)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",left:"-5%",bottom:"0%",width:300,height:300,background:"radial-gradient(circle,rgba(245,197,24,.06) 0%,transparent 70%)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:0,top:"5%",width:"min(400px,80vw)",height:"min(400px,80vw)",background:"radial-gradient(circle,rgba(34,197,94,.08) 0%,transparent 70%)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:0,bottom:"0%",width:"min(300px,70vw)",height:"min(300px,70vw)",background:"radial-gradient(circle,rgba(245,197,24,.06) 0%,transparent 70%)",pointerEvents:"none" }}/>
         <div className="container" style={{ position:"relative",zIndex:1 }}>
           <div style={{ textAlign:"center",marginBottom:32 }}>
             <span style={{ fontSize:11,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",display:"block",marginBottom:10 }}>КАЛЬКУЛЯТОР</span>
