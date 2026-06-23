@@ -2270,20 +2270,22 @@ function SunPowerUASite() {
 
       {/* ══ HEADER — 3 іконки по центру ══ */}
       <header style={{ position:"fixed",top:0,left:0,right:0,zIndex:100, background:scrolled?"rgba(255,255,255,.98)":"rgba(10,10,6,.88)", backdropFilter:"blur(18px)", borderBottom:scrolled?"2px solid #22C55E":"1px solid rgba(255,255,255,.08)", transition:"all .4s cubic-bezier(.16,1,.3,1)", boxShadow:scrolled?"0 2px 16px rgba(34,197,94,.12)":"none", padding:scrolled?"2px 0":"0" }}>
-        <div style={{ maxWidth:1200,margin:"0 auto",padding:"0 clamp(12px,4vw,48px)",display:"flex",alignItems:"center",justifyContent:"center",gap:16,height:scrolled?56:80,transition:"height .35s cubic-bezier(.16,1,.3,1)" }}>
+        <div style={{ maxWidth:1200,margin:"0 auto",padding:"0 clamp(10px,3vw,48px)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"clamp(6px,2vw,16px)",height:scrolled?56:72,transition:"height .35s cubic-bezier(.16,1,.3,1)" }}>
 
-          {/* 🔰 Лого — велике з написом на початку, маленька іконка при скролі */}
+          {/* 🔰 Лого */}
           <div onClick={()=>setAboutOpen(true)} className="navbar-logo-btn" style={{ cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center" }}>
             <img src={scrolled?ICON_LOGO:REAL_LOGO} alt="Sun.Power.Ua"
-              style={{ height:scrolled?48:80, width:scrolled?48:80, objectFit:"contain", borderRadius:scrolled?0:8, transition:"all .35s cubic-bezier(.16,1,.3,1)" }}/>
+              style={{ height:scrolled?40:60, width:scrolled?40:60, objectFit:"contain", borderRadius:scrolled?0:6, transition:"all .35s cubic-bezier(.16,1,.3,1)" }}/>
           </div>
 
-          {/* 📞 Зв'язок — відкриває вибір способу (дзвінок/Viber/WhatsApp) */}
+          {/* Кнопки праворуч */}
+          <div style={{ display:"flex",alignItems:"center",gap:"clamp(5px,1.5vw,12px)",flexShrink:0 }}>
+          {/* 📞 Зв'язок */}
           <button
             onClick={()=>setContactOpen(true)}
-            style={{ width:48,height:48,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",background:"#22C55E",border:"none",cursor:"pointer",boxShadow:"0 4px 14px rgba(34,197,94,.35)",flexShrink:0 }}
+            style={{ width:42,height:42,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",background:"#22C55E",border:"none",cursor:"pointer",boxShadow:"0 4px 14px rgba(34,197,94,.35)",flexShrink:0 }}
             aria-label="Звʼязатися з нами">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.11 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.13 1 .37 1.97.72 2.9a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.18-1.18a2 2 0 012.11-.45c.93.35 1.9.59 2.9.72A2 2 0 0122 16.92z"/>
             </svg>
           </button>
@@ -2292,14 +2294,14 @@ function SunPowerUASite() {
           <button
             onClick={()=>{ setSearchQuery(""); setSearchOpen(true); }}
             className="navicon-search"
-            style={{ width:48,height:48,borderRadius:14,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .35s",background:"transparent",color:scrolled?"#333":"#fff",flexShrink:0 }}
+            style={{ width:42,height:42,borderRadius:12,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .35s",background:"transparent",color:scrolled?"#333":"#fff",flexShrink:0 }}
             aria-label="Пошук">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
           </button>
 
-          {/* 👥 Лічильник відвідувачів — клікабельний */}
+          {/* 💬 Побажання */}
           <button onClick={()=>{
               const last = localStorage.getItem("sunpower_wish_date");
               const today = new Date().toDateString();
@@ -2307,16 +2309,16 @@ function SunPowerUASite() {
               setWishError(""); setWishText(""); setWishContact(""); setWishSent(false); setWishOpen(true);
             }}
             className="navicon-wish"
-            style={{ width:48,height:48,borderRadius:14,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:2,flexShrink:0,background:"transparent",cursor:"pointer",transition:"all .25s" }}
+            style={{ width:42,height:42,borderRadius:12,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,background:"transparent",cursor:"pointer",transition:"all .25s" }}
             title="Залишити побажання">
-            <MessageCircle size={17} color={scrolled?"#1A1A1A":"#fff"}/>
+            <MessageCircle size={18} color={scrolled?"#1A1A1A":"#fff"}/>
           </button>
 
           {/* 🛒 Кошик */}
           <button
             onClick={()=>setShopOpen(true)}
             className="navicon-cart"
-            style={{ width:48,height:48,borderRadius:14,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .35s",background:"transparent",color:scrolled?"#333":"#fff",position:"relative",flexShrink:0,animation:"orderBlink 4s ease-in-out infinite" }}
+            style={{ width:42,height:42,borderRadius:12,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .35s",background:"transparent",color:scrolled?"#333":"#fff",position:"relative",flexShrink:0,animation:"orderBlink 4s ease-in-out infinite" }}
             aria-label="Кошик">
             {cartCount === 0 ? (
               <svg viewBox="0 0 110 95" width="30" height="26" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
@@ -2338,6 +2340,7 @@ function SunPowerUASite() {
               </span>
             )}
           </button>
+          </div>{/* /кнопки */}
 
         </div>
       </header>
@@ -3337,33 +3340,28 @@ function SunPowerUASite() {
       )}
 
       {/* ══ ЛИПКА КНОПКА "ОТРИМАТИ РОЗРАХУНОК" ══ */}
-      <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:997,background:"rgba(10,10,8,.95)",backdropFilter:"blur(12px)",borderTop:"1px solid rgba(34,197,94,.2)" }}>
-        {/* Мобільна версія — компактна */}
-        <div className="show-mobile" style={{ padding:"10px 16px",display:"flex",alignItems:"center",gap:10 }}>
-          <div style={{ flex:1,minWidth:0 }}>
-            <div style={{ fontSize:11,color:"rgba(255,255,255,.5)",fontFamily:"DM Sans,sans-serif" }}>Дізнайтесь скільки зекономите</div>
-            <div style={{ fontSize:13,color:"#22C55E",fontWeight:700,fontFamily:"Syne,sans-serif",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Безкоштовний розрахунок СЕС</div>
-          </div>
-          <button className="btn-green" style={{ padding:"11px 20px",fontSize:13,textTransform:"uppercase",whiteSpace:"nowrap",flexShrink:0 }} onClick={openCalc}>
-            Розрахувати ☀️
+      <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:997,background:"rgba(10,10,8,.97)",backdropFilter:"blur(12px)",borderTop:"1px solid rgba(34,197,94,.2)" }}>
+        {/* Мобільна версія */}
+        <div className="show-mobile" style={{ padding:"8px 14px",display:"flex",alignItems:"center",gap:8 }}>
+          <button className="btn-green" style={{ flex:1,padding:"11px 16px",fontSize:13,textTransform:"uppercase",whiteSpace:"nowrap",justifyContent:"center" }} onClick={openCalc}>
+            РОЗРАХУВАТИ ☀️
           </button>
           <button onClick={()=>setContactOpen(true)} style={{ width:42,height:42,borderRadius:12,background:"rgba(34,197,94,.15)",border:"1.5px solid rgba(34,197,94,.3)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0 }}>
             <Phone size={18} color="#22C55E"/>
           </button>
         </div>
-        {/* Десктопна версія — на всю ширину, поділена навпіл */}
+        {/* Десктопна версія */}
         <div className="hide-mobile" style={{ display:"grid",gridTemplateColumns:"1fr 1fr" }}>
-          <button onClick={openCalc} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"18px 24px",background:"#22C55E",border:"none",borderRight:"1px solid rgba(0,0,0,.15)",cursor:"pointer",transition:"background .2s" }}
+          <button onClick={openCalc} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"16px 24px",background:"#22C55E",border:"none",borderRight:"1px solid rgba(0,0,0,.15)",cursor:"pointer",transition:"background .2s" }}
             onMouseEnter={e=>e.currentTarget.style.background="#16A34A"} onMouseLeave={e=>e.currentTarget.style.background="#22C55E"}>
-            <span style={{ fontSize:20 }}>☀️</span>
-            <span style={{ color:"#fff",fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:15,textTransform:"uppercase",letterSpacing:".03em" }}>Безкоштовний розрахунок СЕС</span>
-            <ArrowRight size={16} color="#fff"/>
+            <span style={{ fontSize:18 }}>☀️</span>
+            <span style={{ color:"#fff",fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:14,textTransform:"uppercase",letterSpacing:".03em" }}>Безкоштовний розрахунок</span>
+            <ArrowRight size={15} color="#fff"/>
           </button>
-          <button onClick={()=>setContactOpen(true)} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"18px 24px",background:"rgba(34,197,94,.12)",border:"none",cursor:"pointer",transition:"background .2s" }}
+          <button onClick={()=>setContactOpen(true)} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:"16px 24px",background:"rgba(34,197,94,.12)",border:"none",cursor:"pointer",transition:"background .2s" }}
             onMouseEnter={e=>e.currentTarget.style.background="rgba(34,197,94,.22)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(34,197,94,.12)"}>
-            <Phone size={18} color="#22C55E"/>
-            <span style={{ color:"#fff",fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:15 }}>Зв'язатися з нами</span>
-            <span style={{ color:"rgba(255,255,255,.5)",fontSize:13 }}>+38 (096) 203 38 39</span>
+            <Phone size={16} color="#22C55E"/>
+            <span style={{ color:"#fff",fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:14 }}>+38 (096) 203 38 39</span>
           </button>
         </div>
       </div>
