@@ -2486,7 +2486,7 @@ function SunPowerUASite() {
           </div>
         </>
       )}
-      <section style={{ position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",overflow:"hidden",background:"#080806" }}>
+      <section style={{ position:"relative",display:"flex",alignItems:"center",overflow:"hidden",background:"#080806",padding:"clamp(100px,18vw,160px) 0 clamp(60px,10vw,100px)" }}>
         <div ref={heroRef} style={{ position:"absolute",inset:0,willChange:"transform" }}>
           <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1920&q=90" alt="СЕС Sun Power UA" loading="eager" decoding="async" style={{ width:"100%",height:"115%",objectFit:"cover",objectPosition:"center bottom" }}/>
           <div style={{ position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(8,8,6,.94) 0%,rgba(8,8,6,.68) 55%,rgba(8,8,6,.84) 100%)" }}/>
