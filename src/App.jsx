@@ -533,20 +533,19 @@ function Logo({ size = 48 }) {
   );
 }
 
-/* ══ СТРІЧКА БРЕНДІВ — на телефоні крутиться рідним скролом браузера (просто і надійно),
-   на комп'ютері можна тягнути мишкою; сама прокручується по колу, коли її не чіпають ══ */
+/* ══ СТРІЧКА БРЕНДІВ — автопрокрутка + рідний touch-скрол + drag мишкою ══ */
 function BrandMarquee({ partners }) {
-  const DUPES = 6; // копій достатньо для безшовного закільцювання
+  const DUPES = 8;
   const scrollerRef = useRef(null);
-  const pausedRef = useRef(false);
-  const resumeTimerRef = useRef(null);
+  const touchActiveRef = useRef(false);
   const mouseDownRef = useRef(false);
   const mouseStartXRef = useRef(0);
   const mouseStartScrollRef = useRef(0);
+  const lastScrollRef = useRef(0);
+  const stuckCountRef = useRef(0);
   const [grabbing, setGrabbing] = useState(false);
 
-  // Стартуємо з середини набору копій, щойно реальна ширина стане відомою
-  // (після завантаження картинок) — це дає запас прокрутки в обидва боки.
+  // Ініціалізація позиції після завантаження картинок
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
@@ -554,27 +553,42 @@ function BrandMarquee({ partners }) {
     const tryInit = () => {
       if (inited) return;
       const w = el.scrollWidth / DUPES;
-      if (w <= 0) return;
+      if (w <= 10) return;
       inited = true;
-      el.scrollLeft = w * Math.floor(DUPES / 2);
+      el.scrollLeft = w * 2; // стартуємо з 2-го блоку — є запас з обох боків
     };
     tryInit();
     const ro = new ResizeObserver(tryInit);
     ro.observe(el);
+    // Повторна спроба коли картинки довантажились
+    const imgs = el.querySelectorAll('img');
+    imgs.forEach(img => img.addEventListener('load', tryInit, {once:true}));
     return () => ro.disconnect();
   }, []);
 
-  // Автопрокрутка по колу + безшовне закільцювання країв
+  // Автопрокрутка — перевіряємо чи користувач торкається
   useEffect(() => {
     let raf;
     const tick = () => {
       const el = scrollerRef.current;
-      if (el && !pausedRef.current && !mouseDownRef.current) {
+      if (el && !touchActiveRef.current && !mouseDownRef.current) {
         const w = el.scrollWidth / DUPES;
-        if (w > 0) {
-          el.scrollLeft += 0.6;
-          if (el.scrollLeft >= w * (DUPES - 1)) el.scrollLeft -= w;
+        if (w > 10) {
+          el.scrollLeft += 0.55;
+          // Безшовне закільцювання
+          if (el.scrollLeft >= w * (DUPES - 2)) el.scrollLeft -= w;
           else if (el.scrollLeft <= 0) el.scrollLeft += w;
+          // Детекція "застрягання" (наприклад прокрутка заблокована iOS)
+          if (Math.abs(el.scrollLeft - lastScrollRef.current) < 0.01) {
+            stuckCountRef.current++;
+            if (stuckCountRef.current > 120) { // ~2 секунди
+              el.scrollLeft = w * 2; // скидаємо позицію
+              stuckCountRef.current = 0;
+            }
+          } else {
+            stuckCountRef.current = 0;
+          }
+          lastScrollRef.current = el.scrollLeft;
         }
       }
       raf = requestAnimationFrame(tick);
@@ -583,44 +597,33 @@ function BrandMarquee({ partners }) {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const pause = () => {
-    pausedRef.current = true;
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-  };
-  const scheduleResume = () => {
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(() => { pausedRef.current = false; }, 1500);
-  };
-
-  // Перетягування мишкою (на тач-екранах рідний скрол спрацьовує сам по собі)
-  const onMouseDown = (e) => {
-    mouseDownRef.current = true; setGrabbing(true); pause();
+  // Drag мишкою (десктоп)
+  const onMouseDown = e => {
+    mouseDownRef.current = true; setGrabbing(true);
     mouseStartXRef.current = e.clientX;
     mouseStartScrollRef.current = scrollerRef.current.scrollLeft;
   };
-  const onMouseMove = (e) => {
+  const onMouseMove = e => {
     if (!mouseDownRef.current || !scrollerRef.current) return;
     scrollerRef.current.scrollLeft = mouseStartScrollRef.current - (e.clientX - mouseStartXRef.current);
   };
-  const endMouseDrag = () => {
-    if (!mouseDownRef.current) return;
-    mouseDownRef.current = false; setGrabbing(false); scheduleResume();
-  };
+  const endDrag = () => { mouseDownRef.current = false; setGrabbing(false); };
 
   return (
     <div
       ref={scrollerRef}
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMove}
-      onMouseUp={endMouseDrag}
-      onMouseLeave={endMouseDrag}
-      onTouchStart={pause}
-      onTouchEnd={scheduleResume}
+      onMouseUp={endDrag}
+      onMouseLeave={endDrag}
+      onTouchStart={() => { touchActiveRef.current = true; }}
+      onTouchEnd={() => { setTimeout(() => { touchActiveRef.current = false; }, 600); }}
+      onTouchCancel={() => { touchActiveRef.current = false; }}
       className="brand-scroller"
-      style={{ display:"flex", gap:42, overflowX:"auto", WebkitOverflowScrolling:"touch", cursor:grabbing?"grabbing":"grab", userSelect:"none" }}>
+      style={{ display:"flex",gap:40,overflowX:"auto",WebkitOverflowScrolling:"touch",cursor:grabbing?"grabbing":"grab",userSelect:"none" }}>
       {Array.from({length:DUPES}).flatMap(()=>partners).map((b,i)=>(
         <span key={i} style={{ display:"inline-flex",alignItems:"center",flexShrink:0 }}>
-          <img src={b.logoSrc} alt={b.name} style={{height:56,objectFit:"contain",maxWidth:220}} draggable={false}/>
+          <img src={b.logoSrc} alt={b.name} style={{height:52,objectFit:"contain",maxWidth:180}} draggable={false}/>
         </span>
       ))}
     </div>
@@ -2461,7 +2464,7 @@ function SunPowerUASite() {
           <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1920&q=90" alt="СЕС Sun Power UA" loading="eager" decoding="async" style={{ width:"100%",height:"115%",objectFit:"cover",objectPosition:"center bottom" }}/>
           <div style={{ position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(8,8,6,.94) 0%,rgba(8,8,6,.68) 55%,rgba(8,8,6,.84) 100%)" }}/>
         </div>
-        <div style={{ position:"absolute",right:0,top:"10%",width:"min(500px,80vw)",height:"min(500px,80vw)",background:"radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 68%)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:"-6%",top:"10%",width:500,height:500,background:"radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 68%)",pointerEvents:"none" }}/>
         <div className="container" style={{ position:"relative",zIndex:1,paddingTop:110,paddingBottom:80 }}>
           <div style={{ maxWidth:800 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(34,197,94,.1)",border:"1px solid rgba(34,197,94,.22)",borderRadius:100,padding:"7px 15px",marginBottom:26,animation:"fadeUp .6s cubic-bezier(.16,1,.3,1) both" }}>
@@ -2518,8 +2521,8 @@ function SunPowerUASite() {
 
       {/* ══ CALCULATOR ══ */}
       <section id="calculator" style={{ background:"#0A0A08", padding:"clamp(28px,5vw,72px) 0 clamp(80px,12vw,120px)", position:"relative", overflow:"hidden" }}>
-        <div style={{ position:"absolute",right:0,top:"5%",width:"min(400px,70vw)",height:"min(400px,70vw)",background:"radial-gradient(circle,rgba(34,197,94,.08) 0%,transparent 70%)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",left:0,bottom:"0%",width:"min(300px,60vw)",height:"min(300px,60vw)",background:"radial-gradient(circle,rgba(245,197,24,.06) 0%,transparent 70%)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:"-10%",top:"5%",width:400,height:400,background:"radial-gradient(circle,rgba(34,197,94,.08) 0%,transparent 70%)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:"-5%",bottom:"0%",width:300,height:300,background:"radial-gradient(circle,rgba(245,197,24,.06) 0%,transparent 70%)",pointerEvents:"none" }}/>
         <div className="container" style={{ position:"relative",zIndex:1 }}>
           <div style={{ textAlign:"center",marginBottom:32 }}>
             <span style={{ fontSize:11,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",display:"block",marginBottom:10 }}>КАЛЬКУЛЯТОР</span>
@@ -2809,54 +2812,54 @@ function SunPowerUASite() {
       </section>
 
       {/* ══ ПОРІВНЯЛЬНА ТАБЛИЦЯ: СЕС vs Генератор vs Мережа ══ */}
-      <section style={{ background:"#fff",padding:"clamp(32px,6vw,80px) 0" }}>
+      <section style={{ background:"#fff",padding:"clamp(28px,5vw,72px) 0" }}>
         <div className="container">
-          <div style={{ textAlign:"center",marginBottom:32 }}>
-            <span style={{ fontSize:11,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",display:"block",marginBottom:10 }}>ПОРІВНЯННЯ</span>
-            <h2>СЕС проти альтернатив</h2>
-            <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"12px auto 0" }}/>
+          <div style={{ textAlign:"center",marginBottom:28 }}>
+            <span style={{ fontSize:11,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",display:"block",marginBottom:8 }}>ПОРІВНЯННЯ</span>
+            <h2 style={{ marginBottom:0 }}>СЕС проти альтернатив</h2>
+            <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"10px auto 0" }}/>
           </div>
-          <div style={{ position:"relative" }}>
-            <div style={{ border:"1px solid var(--border)",borderRadius:18,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,.05)" }}>
-              <div style={{ overflowX:"auto",WebkitOverflowScrolling:"touch" }}>
-                <table style={{ width:"100%",borderCollapse:"separate",borderSpacing:0,minWidth:400 }}>
-                  <thead>
-                    <tr>
-                      {[
-                        { label:"Критерій", bg:"#f7f7f7", color:"var(--text)" },
-                        { label:"☀️ СЕС+АКБ", bg:"#22C55E", color:"#fff" },
-                        { label:"⚡ Генератор", bg:"#f7f7f7", color:"var(--sub)" },
-                        { label:"🔌 Мережа", bg:"#f7f7f7", color:"var(--sub)" },
-                      ].map((h,i)=>(
-                        <th key={h.label} style={{ padding:"13px 14px",textAlign:i===0?"left":"center",fontSize:12,fontWeight:700,color:h.color,background:h.bg,fontFamily:"Syne,sans-serif",letterSpacing:".02em",whiteSpace:"nowrap" }}>{h.label}</th>
+          <div style={{ border:"1px solid var(--border)",borderRadius:16,overflow:"hidden",boxShadow:"0 2px 16px rgba(0,0,0,.06)" }}>
+            <div style={{ overflowX:"auto",WebkitOverflowScrolling:"touch",scrollBehavior:"smooth" }}>
+              <table style={{ width:"100%",borderCollapse:"collapse",minWidth:340 }}>
+                <thead>
+                  <tr>
+                    {[
+                      {l:"Критерій",  bg:"#f8f8f8", c:"var(--text)", align:"left"},
+                      {l:"☀️ СЕС+АКБ",bg:"#22C55E",  c:"#fff",       align:"center"},
+                      {l:"⚡ Генератор",bg:"#f8f8f8",c:"var(--sub)", align:"center"},
+                      {l:"🔌 Мережа",  bg:"#f8f8f8", c:"var(--sub)", align:"center"},
+                    ].map((h,i)=>(
+                      <th key={i} style={{ padding:"11px 12px",textAlign:h.align,fontSize:11,fontWeight:700,color:h.c,background:h.bg,fontFamily:"Syne,sans-serif",letterSpacing:".04em",borderBottom:"2px solid",borderBottomColor:i===1?"#16A34A":"#f0f0f0" }}>{h.l}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["Вартість/міс","~0–350 ₴","800–3000 ₴","2000–5000 ₴"],
+                    ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
+                    ["Шум","✅ Безшумно","❌ Гучний","—"],
+                    ["Вихлоп/запах","✅ Немає","❌ Є","—"],
+                    ["Окупність","7–10 р","Ніколи","—"],
+                    ["Заробіток","✅ Зел. тариф","❌ Ні","❌ Ні"],
+                    ["Обслуговування","✅ Мінімальне","❌ Регулярне","—"],
+                    ["Гарантія","✅ 5–10 р","⚠️ 1–2 р","—"],
+                  ].map(([cr,...vals],ri,arr)=>(
+                    <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
+                      <td style={{ padding:"10px 12px",fontSize:12,color:"var(--text)",fontWeight:600,borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none" }}>{cr}</td>
+                      {vals.map((v,vi)=>(
+                        <td key={vi} style={{ padding:"10px 12px",fontSize:12,textAlign:"center",color:vi===0?"#16A34A":v.startsWith("❌")?"#EF4444":v.startsWith("⚠️")?"#B45309":"var(--sub)",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.04)":"transparent",borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none" }}>{v}</td>
                       ))}
                     </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      ["Вартість/міс","~0–350 ₴","800–3000 ₴","2000–5000 ₴"],
-                      ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
-                      ["Шум","✅ Безшумно","❌ Гучний","—"],
-                      ["Вихлоп/запах","✅ Немає","❌ Є","—"],
-                      ["Окупність","7–10 р (дім)","Ніколи","—"],
-                      ["Заробіток","✅ Зелений тариф","❌ Ні","❌ Ні"],
-                      ["Обслуговування","✅ Мінімальне","❌ Регулярне","—"],
-                      ["Гарантія","✅ 5–10 років","⚠️ 1–2 роки","—"],
-                    ].map(([cr,...vals],ri,arr)=>(
-                      <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
-                        <td style={{ padding:"11px 14px",fontSize:13,color:"var(--text)",fontWeight:600,borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{cr}</td>
-                        {vals.map((v,vi)=>(
-                          <td key={vi} style={{ padding:"11px 14px",fontSize:13,textAlign:"center",color:vi===0?"#16A34A":v.startsWith("❌")?"#EF4444":"#555",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.04)":"transparent",borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{v}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="show-mobile" style={{ textAlign:"center",fontSize:11,color:"#aaa",marginTop:10 }}>← гортайте таблицю пальцем →</div>
           </div>
-          <p style={{ textAlign:"center",fontSize:12,color:"#aaa",marginTop:16 }}>* Розрахунок для будинку 5 кВт·год/день, тариф 4.32 ₴/кВт·год</p>
+          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:12,flexWrap:"wrap",gap:8 }}>
+            <p style={{ fontSize:11,color:"#aaa",margin:0 }}>* Для будинку 5 кВт·год/день, тариф 4.32 ₴/кВт·год</p>
+            <span className="show-mobile" style={{ fontSize:11,color:"#aaa" }}>← гортайте →</span>
+          </div>
         </div>
       </section>
 
