@@ -718,7 +718,7 @@ function Shop({ cart, setCart, products, onClose }) {
       {/* Shop Header */}
       <div style={{ position:"sticky",top:0,zIndex:10,background:"rgba(245,245,245,.96)",backdropFilter:"blur(16px)",borderBottom:"2px solid #22C55E" }}>
         <div className="container" style={{ display:"flex",alignItems:"center",gap:12,height:62 }}>
-          <button onClick={onClose} style={{ display:"flex",alignItems:"center",justifyContent:"center",background:"none",border:"none",cursor:"pointer",color:"#555",width:34,height:34,borderRadius:8,transition:"all .2s",flexShrink:0 }}
+          <button onClick={onClose} style={{ display:"flex",alignItems:"center",justifyContent:"center",background:"none",border:"none",cursor:"pointer",color:"var(--sub)",width:34,height:34,borderRadius:8,transition:"all .2s",flexShrink:0 }}
             onMouseEnter={e=>{ e.currentTarget.style.background="rgba(0,0,0,.05)"; e.currentTarget.style.color="#1A1A1A"; }}
             onMouseLeave={e=>{ e.currentTarget.style.background="transparent"; e.currentTarget.style.color="#555"; }}
             aria-label="Назад">
@@ -730,7 +730,7 @@ function Shop({ cart, setCart, products, onClose }) {
               <span style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:16,color:"#1E6B2E",letterSpacing:"-0.2px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>
                 Sun<span style={{color:"#22C55E"}}>.</span>Power<span style={{color:"#22C55E"}}>.</span><span style={{color:"#F5C518"}}>Ua</span>
               </span>
-              <span style={{ fontSize:11,color:"#999",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Магазин обладнання</span>
+              <span style={{ fontSize:11,color:"#aaa",fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Магазин обладнання</span>
             </div>
           </div>
           <button onClick={()=>setCartOpen(true)} style={{ position:"relative",display:"flex",alignItems:"center",gap:7,background:"#22C55E",color:"#fff",border:"none",borderRadius:100,padding:"8px 16px",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontWeight:700,fontSize:13,flexShrink:0 }}>
@@ -756,7 +756,7 @@ function Shop({ cart, setCart, products, onClose }) {
         <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:5,marginBottom:20 }}>
           {[[<Truck size={11} color="#22C55E"/>,"Доставка"],[<Shield size={11} color="#22C55E"/>,"Гарантія"],[<RotateCcw size={11} color="#22C55E"/>,"Повернення"],[<CreditCard size={11} color="#F5C518"/>,"0% розстр."]].map(([ico,txt],i)=>(
             <div key={i} style={{ background:"#fff",border:"1px solid var(--border)",borderRadius:8,padding:"6px 2px",display:"flex",flexDirection:"column",alignItems:"center",gap:3,textAlign:"center" }}>
-              {ico}<span style={{ fontSize:8,fontWeight:500,color:"#555",lineHeight:1.1 }}>{txt}</span>
+              {ico}<span style={{ fontSize:8,fontWeight:500,color:"var(--sub)",lineHeight:1.1 }}>{txt}</span>
             </div>
           ))}
         </div>
@@ -770,13 +770,13 @@ function Shop({ cart, setCart, products, onClose }) {
             <ChevronDown size={15} color="#22C55E" style={{ flexShrink:0,marginLeft:4,transition:"transform .2s",transform:catMenuOpen?"rotate(180deg)":"none" }}/>
           </button>
           <div style={{ position:"relative",flex:"1 1 110px",minWidth:0 }}>
-            <Search size={13} style={{ position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",color:"#999" }}/>
+            <Search size={13} style={{ position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",color:"#aaa" }}/>
             <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Пошук..."
               style={{ width:"100%",padding:"10px 10px 10px 32px",border:"1.5px solid var(--border)",borderRadius:100,fontFamily:"DM Sans,sans-serif",fontSize:13,outline:"none",background:"#fff" }}
               onFocus={e=>e.target.style.borderColor="#22C55E"} onBlur={e=>e.target.style.borderColor="var(--border)"}/>
-            {search&&<button onClick={()=>setSearch("")} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:"#999",display:"flex",padding:2 }}><X size={13}/></button>}
+            {search&&<button onClick={()=>setSearch("")} style={{ position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:"#aaa",display:"flex",padding:2 }}><X size={13}/></button>}
           </div>
-          <select value={sort} onChange={e=>setSort(e.target.value)} style={{ padding:"10px 10px",border:"1.5px solid var(--border)",borderRadius:100,fontFamily:"DM Sans,sans-serif",fontSize:12,background:"#fff",color:"#555",cursor:"pointer",outline:"none",flexShrink:0,maxWidth:120 }}>
+          <select value={sort} onChange={e=>setSort(e.target.value)} style={{ padding:"10px 10px",border:"1.5px solid var(--border)",borderRadius:100,fontFamily:"DM Sans,sans-serif",fontSize:12,background:"#fff",color:"var(--sub)",cursor:"pointer",outline:"none",flexShrink:0,maxWidth:120 }}>
             <option value="popular">Популярність</option>
             <option value="rating">Рейтинг</option>
             <option value="price_asc">Ціна ↑</option>
@@ -806,7 +806,7 @@ function Shop({ cart, setCart, products, onClose }) {
             </div>
           </div>
         )}
-        <div style={{ fontSize:12,color:"#555",marginBottom:18 }}>Знайдено: <strong style={{color:"#1A1A1A"}}>{filtered.length}</strong> товарів</div>
+        <div style={{ fontSize:12,color:"var(--sub)",marginBottom:18 }}>Знайдено: <strong style={{color:"#1A1A1A"}}>{filtered.length}</strong> товарів</div>
         {/* Grid */}
         <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,240px),1fr))",gap:18 }}>
           {filtered.map(p=>(
@@ -824,7 +824,7 @@ function Shop({ cart, setCart, products, onClose }) {
                 <div onClick={()=>{ setDetail(p); setDetailTab("opis"); }} style={{ fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:14,lineHeight:1.3,marginBottom:7,cursor:"pointer" }}>{p.name}</div>
                 <div style={{ display:"flex",alignItems:"center",gap:4,marginBottom:10 }}>
                   <div style={{ display:"flex",gap:1 }}>{[...Array(5)].map((_,i)=><Star key={i} size={10} fill={i<Math.floor(p.rating)?"#F5C518":"#E5E7EB"} color={i<Math.floor(p.rating)?"#F5C518":"#E5E7EB"}/>)}</div>
-                  <span style={{ fontSize:11,color:"#555" }}>{p.rating} ({p.reviews})</span>
+                  <span style={{ fontSize:11,color:"var(--sub)" }}>{p.rating} ({p.reviews})</span>
                 </div>
                 <div style={{ display:"flex",gap:5,flexWrap:"wrap",marginBottom:12 }}>
                   {p.power&&<span style={{ fontSize:10,padding:"2px 7px",background:"rgba(34,197,94,.1)",borderRadius:6,color:"#14532D",fontWeight:700 }}>{p.power}</span>}
@@ -862,7 +862,7 @@ function Shop({ cart, setCart, products, onClose }) {
               <span style={{ fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:17 }}>Кошик</span>
               {cartCount>0&&<span style={{ background:"#22C55E",color:"#fff",borderRadius:100,padding:"2px 8px",fontSize:11,fontWeight:700 }}>{cartCount}</span>}
             </div>
-            <button onClick={()=>setCartOpen(false)} style={{ background:"none",border:"none",cursor:"pointer",padding:6,color:"#555",display:"flex" }}><X size={19}/></button>
+            <button onClick={()=>setCartOpen(false)} style={{ background:"none",border:"none",cursor:"pointer",padding:6,color:"var(--sub)",display:"flex" }}><X size={19}/></button>
           </div>
           <div style={{ flex:1,overflowY:"auto",minHeight:0,padding:"14px" }}>
             {cart.length===0?(<div style={{ textAlign:"center",padding:"60px 24px" }}>
@@ -876,7 +876,7 @@ function Shop({ cart, setCart, products, onClose }) {
                 </svg>
               </div>
               <div style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:18,textTransform:"uppercase",letterSpacing:".03em",marginBottom:8,color:"#1A1A1A" }}>Ваш кошик наразі порожній</div>
-              <p style={{ color:"#555",fontSize:14,marginBottom:24 }}>Відвідайте наш каталог товарів та послуг</p>
+              <p style={{ color:"var(--sub)",fontSize:14,marginBottom:24 }}>Відвідайте наш каталог товарів та послуг</p>
               <button className="btn-yellow" style={{ textTransform:"uppercase",letterSpacing:".05em",fontSize:14,padding:"14px 28px" }} onClick={()=>setCartOpen(false)}>
                 ДО ЗАМОВЛЕНЬ ↗
               </button>
@@ -904,10 +904,10 @@ function Shop({ cart, setCart, products, onClose }) {
           {cart.length>0&&(
             <div style={{ padding:"14px 22px",borderTop:"1px solid var(--border)",flexShrink:0 }}>
               <div style={{ display:"flex",justifyContent:"space-between",marginBottom:5 }}>
-                <span style={{ color:"#555",fontSize:13 }}>Разом:</span>
+                <span style={{ color:"var(--sub)",fontSize:13 }}>Разом:</span>
                 <span style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:20 }}>{cartTotal.toLocaleString()} ₴</span>
               </div>
-              <p style={{ fontSize:11,color:"#555",marginBottom:12 }}>+ доставка та монтаж за домовленістю</p>
+              <p style={{ fontSize:11,color:"var(--sub)",marginBottom:12 }}>+ доставка та монтаж за домовленістю</p>
 
               {/* Monobank форма */}
               {!payStep ? (
@@ -926,14 +926,14 @@ function Shop({ cart, setCart, products, onClose }) {
                   </div>
 
                   <div style={{ marginBottom:10 }}>
-                    <label style={{ fontSize:11,fontWeight:600,color:"#555",display:"block",marginBottom:4 }}>ІМ'Я</label>
+                    <label style={{ fontSize:11,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:4 }}>ІМ'Я</label>
                     <input type="text" placeholder="Ваше ім'я та прізвище" value={orderName} onChange={e=>setOrderName(e.target.value)}
                       style={{ width:"100%",padding:"9px 12px",border:"1.5px solid var(--border)",borderRadius:10,fontFamily:"DM Sans,sans-serif",fontSize:13,outline:"none" }}
                       onFocus={e=>e.target.style.borderColor="#22C55E"}
                       onBlur={e=>e.target.style.borderColor="var(--border)"}/>
                   </div>
                   <div style={{ marginBottom:10 }}>
-                    <label style={{ fontSize:11,fontWeight:600,color:"#555",display:"block",marginBottom:4 }}>ТЕЛЕФОН *</label>
+                    <label style={{ fontSize:11,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:4 }}>ТЕЛЕФОН *</label>
                     <input type="tel" placeholder="+380 96 203 38 39" value={orderPhone}
                       onChange={e=>{ setOrderPhone(e.target.value); setOrderPhoneError(false); }}
                       style={{ width:"100%",padding:"9px 12px",border:`1.5px solid ${orderPhoneError?"#EF4444":"var(--border)"}`,borderRadius:10,fontFamily:"DM Sans,sans-serif",fontSize:13,outline:"none" }}
@@ -942,7 +942,7 @@ function Shop({ cart, setCart, products, onClose }) {
                     {orderPhoneError && <p style={{ fontSize:11,color:"#EF4444",marginTop:4 }}>Введіть коректний номер телефону (наприклад, +380961234567)</p>}
                   </div>
                   <div style={{ marginBottom:14 }}>
-                    <label style={{ fontSize:11,fontWeight:600,color:"#555",display:"block",marginBottom:4 }}>КОМЕНТАР</label>
+                    <label style={{ fontSize:11,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:4 }}>КОМЕНТАР</label>
                     <input type="text" placeholder="Адреса доставки або коментар" value={orderComment} onChange={e=>setOrderComment(e.target.value)}
                       style={{ width:"100%",padding:"9px 12px",border:"1.5px solid var(--border)",borderRadius:10,fontFamily:"DM Sans,sans-serif",fontSize:13,outline:"none" }}
                       onFocus={e=>e.target.style.borderColor="#22C55E"}
@@ -951,7 +951,7 @@ function Shop({ cart, setCart, products, onClose }) {
 
                   {/* Способи оплати */}
                   <div style={{ marginBottom:14 }}>
-                    <label style={{ fontSize:11,fontWeight:600,color:"#555",display:"block",marginBottom:8 }}>СПОСІБ ОПЛАТИ</label>
+                    <label style={{ fontSize:11,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:8 }}>СПОСІБ ОПЛАТИ</label>
                     <div style={{ display:"flex",gap:8,flexWrap:"wrap" }}>
                       {[
                         { id:"mono", label:"🟡 Оплата карткою (Monobank)" },
@@ -968,7 +968,7 @@ function Shop({ cart, setCart, products, onClose }) {
 
                   {/* Сума */}
                   <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 14px",background:"#fff",borderRadius:10,marginBottom:12,border:"1px solid rgba(34,197,94,.15)" }}>
-                    <span style={{ fontSize:13,color:"#555" }}>До сплати:</span>
+                    <span style={{ fontSize:13,color:"var(--sub)" }}>До сплати:</span>
                     <span style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:20,color:"#22C55E" }}>{cartTotal.toLocaleString()} ₴</span>
                   </div>
 
@@ -1033,7 +1033,7 @@ function Shop({ cart, setCart, products, onClose }) {
                           ⚠️ Помилка надсилання в Telegram: {orderTgError}
                         </div>
                       )}
-                      <button style={{ width:"100%",marginTop:7,padding:"8px",background:"none",border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontSize:12,color:"#555" }}
+                      <button style={{ width:"100%",marginTop:7,padding:"8px",background:"none",border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontSize:12,color:"var(--sub)" }}
                         onClick={()=>setPayStep(false)}>
                         ← Назад
                       </button>
@@ -1042,7 +1042,7 @@ function Shop({ cart, setCart, products, onClose }) {
                     <div style={{ textAlign:"center",padding:"8px 0" }}>
                       <div style={{ fontSize:40,marginBottom:10 }}>🎉</div>
                       <div style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:17,marginBottom:6 }}>Дякуємо за замовлення!</div>
-                      <p style={{ fontSize:13,color:"#555",lineHeight:1.6,marginBottom:14 }}>Менеджер зв'яжеться з вами протягом 30 секунд для підтвердження.</p>
+                      <p style={{ fontSize:13,color:"var(--sub)",lineHeight:1.6,marginBottom:14 }}>Менеджер зв'яжеться з вами протягом 30 секунд для підтвердження.</p>
                       <button className="btn-green" style={{ width:"100%",justifyContent:"center",padding:"12px",textTransform:"uppercase",fontSize:13 }}
                         onClick={()=>{ setPayStep(false); setOrderSent(false); setOrderName(""); setOrderPhone(""); setOrderComment(""); setCart([]); setCartOpen(false); }}>
                         Готово
@@ -1051,7 +1051,7 @@ function Shop({ cart, setCart, products, onClose }) {
                   )}
                 </div>
               )}
-              <button style={{ width:"100%",marginTop:7,padding:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontSize:12,color:"#555" }} onClick={()=>setCartOpen(false)}>Продовжити покупки</button>
+              <button style={{ width:"100%",marginTop:7,padding:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontSize:12,color:"var(--sub)" }} onClick={()=>setCartOpen(false)}>Продовжити покупки</button>
             </div>
           )}
         </div></>
@@ -1063,7 +1063,7 @@ function Shop({ cart, setCart, products, onClose }) {
         <div className="cart-panel" style={{ width:"min(500px,100vw)" }}>
           <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 20px 12px",borderBottom:"1px solid var(--border)",flexShrink:0 }}>
             <span style={{ fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:15 }}>Деталі товару</span>
-            <button onClick={()=>setDetail(null)} style={{ background:"none",border:"none",cursor:"pointer",padding:6,color:"#555",display:"flex" }}><X size={19}/></button>
+            <button onClick={()=>setDetail(null)} style={{ background:"none",border:"none",cursor:"pointer",padding:6,color:"var(--sub)",display:"flex" }}><X size={19}/></button>
           </div>
           <div style={{ flex:1,overflowY:"auto",minHeight:0 }}>
             <div style={{ aspectRatio:"16/9",overflow:"hidden" }}>
@@ -1074,7 +1074,7 @@ function Shop({ cart, setCart, products, onClose }) {
               <h3 style={{ marginBottom:8,lineHeight:1.3 }}>{detail.name}</h3>
               <div style={{ display:"flex",alignItems:"center",gap:5,marginBottom:16 }}>
                 <div style={{ display:"flex",gap:2 }}>{[...Array(5)].map((_,i)=><Star key={i} size={12} fill={i<Math.floor(detail.rating)?"#F5C518":"#E5E7EB"} color={i<Math.floor(detail.rating)?"#F5C518":"#E5E7EB"}/>)}</div>
-                <span style={{ fontSize:12,color:"#555" }}>{detail.rating} · {detail.reviews} відгуків</span>
+                <span style={{ fontSize:12,color:"var(--sub)" }}>{detail.rating} · {detail.reviews} відгуків</span>
               </div>
 
               {/* ══ ВКЛАДКИ: ОПИС / ХАРАКТЕРИСТИКИ ══ */}
@@ -1088,9 +1088,9 @@ function Shop({ cart, setCart, products, onClose }) {
               </div>
 
               {detailTab==="opis" && (<>
-              <p style={{ fontSize:13,color:"#555",lineHeight:1.75,marginBottom:6 }}>{detail.desc.replace(/\s*Курс\s*\$1=[\d.]+₴,?\s*ціна орієнтовна\.?/i,"")}</p>
+              <p style={{ fontSize:13,color:"var(--sub)",lineHeight:1.75,marginBottom:6 }}>{detail.desc.replace(/\s*Курс\s*\$1=[\d.]+₴,?\s*ціна орієнтовна\.?/i,"")}</p>
               {/Курс\s*\$1=[\d.]+₴/i.test(detail.desc) && (
-                <p style={{ fontSize:11,color:"#999",fontStyle:"italic",marginBottom:18 }}>
+                <p style={{ fontSize:11,color:"#aaa",fontStyle:"italic",marginBottom:18 }}>
                   {detail.desc.match(/Курс\s*\$1=[\d.]+₴,?\s*ціна орієнтовна\.?/i)?.[0]}
                 </p>
               )}
@@ -1103,7 +1103,7 @@ function Shop({ cart, setCart, products, onClose }) {
                     {detail.kit.map((item,i)=>(
                       <div key={i} style={{ display:"flex",alignItems:"flex-start",gap:8 }}>
                         <span style={{ color:"#22C55E",fontSize:13,lineHeight:1.6 }}>•</span>
-                        <span style={{ fontSize:13,color:"#444",lineHeight:1.6 }}>{item}</span>
+                        <span style={{ fontSize:13,color:"var(--text)",lineHeight:1.6 }}>{item}</span>
                       </div>
                     ))}
                   </div>
@@ -1120,7 +1120,7 @@ function Shop({ cart, setCart, products, onClose }) {
                         <div style={{ width:18,height:18,borderRadius:"50%",background:"rgba(34,197,94,.1)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1 }}>
                           <Check size={11} color="#22C55E"/>
                         </div>
-                        <span style={{ fontSize:13,color:"#444",lineHeight:1.6 }}>{item}</span>
+                        <span style={{ fontSize:13,color:"var(--text)",lineHeight:1.6 }}>{item}</span>
                       </div>
                     ))}
                   </div>
@@ -1132,7 +1132,7 @@ function Shop({ cart, setCart, products, onClose }) {
               <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:20 }}>
                 {[detail.power&&["Потужність",detail.power],["Гарантія",detail.warranty],["Категорія",detail.cat],["Бренд",detail.brand]].filter(Boolean).map(([k,v])=>(
                   <div key={k} style={{ background:"#F5F5F5",borderRadius:10,padding:"9px 12px" }}>
-                    <div style={{ fontSize:9,fontWeight:600,color:"#555",textTransform:"uppercase",letterSpacing:".06em",marginBottom:2 }}>{k}</div>
+                    <div style={{ fontSize:9,fontWeight:600,color:"var(--sub)",textTransform:"uppercase",letterSpacing:".06em",marginBottom:2 }}>{k}</div>
                     <div style={{ fontWeight:700,fontSize:13 }}>{v}</div>
                   </div>
                 ))}
@@ -1148,12 +1148,12 @@ function Shop({ cart, setCart, products, onClose }) {
                       <div style={{ display:"flex",alignItems:"center",gap:7,marginBottom:8 }}>
                         <span style={{ fontSize:15 }}>🔆</span>
                         <span style={{ fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:13 }}>Панелі</span>
-                        <span style={{ fontSize:11,color:"#888" }}>· {detail.panelName}</span>
+                        <span style={{ fontSize:11,color:"var(--sub)" }}>· {detail.panelName}</span>
                       </div>
                       <div style={{ border:"1px solid var(--border)",borderRadius:10,overflow:"hidden" }}>
                         {detail.specs.panel.map(([k,v],i)=>(
                           <div key={k} style={{ display:"flex",justifyContent:"space-between",padding:"8px 12px",background:i%2===0?"#fff":"#FAFAFA",borderBottom:i<detail.specs.panel.length-1?"1px solid var(--border)":"none" }}>
-                            <span style={{ fontSize:12,color:"#555" }}>{k}</span>
+                            <span style={{ fontSize:12,color:"var(--sub)" }}>{k}</span>
                             <span style={{ fontSize:12,fontWeight:700,color:"#1A1A1A" }}>{v}</span>
                           </div>
                         ))}
@@ -1166,12 +1166,12 @@ function Shop({ cart, setCart, products, onClose }) {
                       <div style={{ display:"flex",alignItems:"center",gap:7,marginBottom:8 }}>
                         <span style={{ fontSize:15 }}>⚡</span>
                         <span style={{ fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:13 }}>Інвертор</span>
-                        <span style={{ fontSize:11,color:"#888" }}>· {detail.invName}</span>
+                        <span style={{ fontSize:11,color:"var(--sub)" }}>· {detail.invName}</span>
                       </div>
                       <div style={{ border:"1px solid var(--border)",borderRadius:10,overflow:"hidden" }}>
                         {detail.specs.inverter.map(([k,v],i)=>(
                           <div key={k} style={{ display:"flex",justifyContent:"space-between",padding:"8px 12px",background:i%2===0?"#fff":"#FAFAFA",borderBottom:i<detail.specs.inverter.length-1?"1px solid var(--border)":"none" }}>
-                            <span style={{ fontSize:12,color:"#555" }}>{k}</span>
+                            <span style={{ fontSize:12,color:"var(--sub)" }}>{k}</span>
                             <span style={{ fontSize:12,fontWeight:700,color:"#1A1A1A" }}>{v}</span>
                           </div>
                         ))}
@@ -1184,12 +1184,12 @@ function Shop({ cart, setCart, products, onClose }) {
                       <div style={{ display:"flex",alignItems:"center",gap:7,marginBottom:8 }}>
                         <span style={{ fontSize:15 }}>🔋</span>
                         <span style={{ fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:13 }}>Акумулятор</span>
-                        <span style={{ fontSize:11,color:"#888" }}>· {detail.akbName}</span>
+                        <span style={{ fontSize:11,color:"var(--sub)" }}>· {detail.akbName}</span>
                       </div>
                       <div style={{ border:"1px solid var(--border)",borderRadius:10,overflow:"hidden" }}>
                         {detail.specs.akb.map(([k,v],i)=>(
                           <div key={k} style={{ display:"flex",justifyContent:"space-between",padding:"8px 12px",background:i%2===0?"#fff":"#FAFAFA",borderBottom:i<detail.specs.akb.length-1?"1px solid var(--border)":"none" }}>
-                            <span style={{ fontSize:12,color:"#555" }}>{k}</span>
+                            <span style={{ fontSize:12,color:"var(--sub)" }}>{k}</span>
                             <span style={{ fontSize:12,fontWeight:700,color:"#1A1A1A" }}>{v}</span>
                           </div>
                         ))}
@@ -1206,7 +1206,7 @@ function Shop({ cart, setCart, products, onClose }) {
                       <div style={{ border:"1px solid var(--border)",borderRadius:10,overflow:"hidden" }}>
                         {detail.specs.mount.map(([k,v],i)=>(
                           <div key={k} style={{ display:"flex",justifyContent:"space-between",padding:"8px 12px",background:i%2===0?"#fff":"#FAFAFA",borderBottom:i<detail.specs.mount.length-1?"1px solid var(--border)":"none" }}>
-                            <span style={{ fontSize:12,color:"#555" }}>{k}</span>
+                            <span style={{ fontSize:12,color:"var(--sub)" }}>{k}</span>
                             <span style={{ fontSize:12,fontWeight:700,color:"#1A1A1A" }}>{v}</span>
                           </div>
                         ))}
@@ -1908,13 +1908,13 @@ function AdminLeadsTab() {
   };
 
   if (leads === null && !error) {
-    return <div style={{ textAlign:"center",padding:"60px 0",color:"#888" }}>Завантаження заявок...</div>;
+    return <div style={{ textAlign:"center",padding:"60px 0",color:"var(--sub)" }}>Завантаження заявок...</div>;
   }
   if (error) {
     return (
       <div style={{ textAlign:"center",padding:"40px 20px" }}>
         <p style={{ color:"#EF4444",marginBottom:12 }}>{error}</p>
-        <p style={{ fontSize:13,color:"#888" }}>Можливо, база даних (Vercel KV) ще не підключена в Environment Variables.</p>
+        <p style={{ fontSize:13,color:"var(--sub)" }}>Можливо, база даних (Vercel KV) ще не підключена в Environment Variables.</p>
         <button onClick={load} className="btn-outline-green" style={{ marginTop:16 }}>Спробувати знову</button>
       </div>
     );
@@ -1934,7 +1934,7 @@ function AdminLeadsTab() {
         ))}
       </div>
       {filtered.length===0 ? (
-        <div style={{ textAlign:"center",padding:"60px 0",color:"#888" }}>Заявок немає</div>
+        <div style={{ textAlign:"center",padding:"60px 0",color:"var(--sub)" }}>Заявок немає</div>
       ) : (
         <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
           {filtered.map(lead => {
@@ -1943,18 +1943,18 @@ function AdminLeadsTab() {
               <div key={lead.id} style={{ background:"#fff",border:"1px solid var(--border)",borderRadius:14,padding:16 }}>
                 <div style={{ display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8,gap:8 }}>
                   <div style={{ minWidth:0 }}>
-                    <div style={{ fontSize:11,color:"#888",marginBottom:3 }}>{LEAD_TYPE_LABEL[lead.type] || lead.type} · {new Date(lead.createdAt).toLocaleString("uk-UA")}</div>
+                    <div style={{ fontSize:11,color:"var(--sub)",marginBottom:3 }}>{LEAD_TYPE_LABEL[lead.type] || lead.type} · {new Date(lead.createdAt).toLocaleString("uk-UA")}</div>
                     <div style={{ fontWeight:700,fontSize:15 }}>{lead.name || "Без імені"}</div>
                     <a href={`tel:${lead.phone}`} style={{ color:"#22C55E",fontSize:14,fontWeight:600,textDecoration:"none" }}>{lead.phone}</a>
                   </div>
                   <span style={{ flexShrink:0,padding:"4px 10px",borderRadius:100,fontSize:11,fontWeight:700,color:st.color,background:st.bg }}>{st.label}</span>
                 </div>
                 {lead.amount!=null && <div style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:16,color:"#22C55E",marginBottom:6 }}>{lead.amount.toLocaleString()} ₴</div>}
-                {lead.details && <p style={{ fontSize:13,color:"#555",marginBottom:10,lineHeight:1.5 }}>{lead.details}</p>}
+                {lead.details && <p style={{ fontSize:13,color:"var(--sub)",marginBottom:10,lineHeight:1.5 }}>{lead.details}</p>}
                 <div style={{ display:"flex",gap:6,flexWrap:"wrap" }}>
                   {Object.entries(LEAD_STATUS).map(([k,v])=>(
                     <button key={k} onClick={()=>updateStatus(lead.id,k)}
-                      style={{ padding:"5px 10px",borderRadius:8,border:`1.5px solid ${lead.status===k?v.color:"var(--border)"}`,background:lead.status===k?v.bg:"#fff",color:lead.status===k?v.color:"#888",fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"DM Sans,sans-serif" }}>
+                      style={{ padding:"5px 10px",borderRadius:8,border:`1.5px solid ${lead.status===k?v.color:"var(--border)"}`,background:lead.status===k?v.bg:"#fff",color:lead.status===k?v.color:"var(--sub)",fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"DM Sans,sans-serif" }}>
                       {v.label}
                     </button>
                   ))}
@@ -2022,7 +2022,7 @@ function AdminProductsTab() {
   };
 
   if (error) return <div style={{ textAlign:"center",padding:"40px 0",color:"#EF4444" }}>{error}</div>;
-  if (items === null) return <div style={{ textAlign:"center",padding:"60px 0",color:"#888" }}>Завантаження каталогу...</div>;
+  if (items === null) return <div style={{ textAlign:"center",padding:"60px 0",color:"var(--sub)" }}>Завантаження каталогу...</div>;
 
   return (
     <div>
@@ -2031,7 +2031,7 @@ function AdminProductsTab() {
         <button onClick={save} disabled={saving} className="btn-green" style={{ fontSize:13,padding:"9px 16px",opacity:saving?.7:1 }}>
           {saving ? "Зберігаємо..." : "💾 Зберегти всі зміни"}
         </button>
-        <span style={{ fontSize:12,color:"#888",marginLeft:"auto" }}>{items.length} товарів</span>
+        <span style={{ fontSize:12,color:"var(--sub)",marginLeft:"auto" }}>{items.length} товарів</span>
       </div>
       {saveMsg && (
         <div style={{ padding:"10px 14px",borderRadius:10,marginBottom:14,fontSize:13,fontWeight:600,
@@ -2058,7 +2058,7 @@ function AdminProductsTab() {
               <div style={{ position:"relative" }}>
                 <input type="number" value={p.price} onChange={e=>updateField(p.id,"price",parseInt(e.target.value)||0)}
                   style={{ width:"100%",padding:"8px 10px",border:"1.5px solid #22C55E",borderRadius:8,fontSize:13,fontWeight:700,color:"#15803D",fontFamily:"DM Sans,sans-serif" }}/>
-                <span style={{ position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",fontSize:11,color:"#888" }}>₴</span>
+                <span style={{ position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",fontSize:11,color:"var(--sub)" }}>₴</span>
               </div>
               <input value={p.warranty} onChange={e=>updateField(p.id,"warranty",e.target.value)} placeholder="Гарантія"
                 style={{ padding:"8px 10px",border:"1.5px solid var(--border)",borderRadius:8,fontSize:13,fontFamily:"DM Sans,sans-serif" }}/>
@@ -2395,7 +2395,7 @@ function SunPowerUASite() {
               {/* Про нас */}
               <div style={{ marginBottom:24 }}>
                 <span style={{ fontSize:10,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",display:"block",marginBottom:10 }}>ПРО КОМПАНІЮ</span>
-                <p style={{ fontSize:14,color:"#555",lineHeight:1.75 }}>
+                <p style={{ fontSize:14,color:"var(--sub)",lineHeight:1.75 }}>
                   Sun Power UA — компанія з <strong>3-річним досвідом</strong> у встановленні сонячних електростанцій. Ми закрили понад <strong>50 об'єктів</strong>, встановили більше <strong>1000+ панелей</strong>, а наші станції щодня виробляють близько <strong>3 МВт</strong> чистої енергії.
                 </p>
               </div>
@@ -2410,7 +2410,7 @@ function SunPowerUASite() {
                 ].map((s,i)=>(
                   <div key={i} style={{ background:"#F0FDF4",borderRadius:14,padding:"14px 16px",border:"1px solid rgba(34,197,94,.15)" }}>
                     <div style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:22,color:"#16A34A",lineHeight:1,marginBottom:4 }}>{s.n}</div>
-                    <div style={{ fontSize:11,color:"#555",fontWeight:500 }}>{s.l}</div>
+                    <div style={{ fontSize:11,color:"var(--sub)",fontWeight:500 }}>{s.l}</div>
                   </div>
                 ))}
               </div>
@@ -2444,7 +2444,7 @@ function SunPowerUASite() {
                   "✅ Зелений тариф Net-billing — оформляємо",
                   "✅ Підтримка на кожному етапі",
                 ].map((t,i)=>(
-                  <div key={i} style={{ fontSize:14,color:"#555",padding:"6px 0",lineHeight:1.5 }}>{t}</div>
+                  <div key={i} style={{ fontSize:14,color:"var(--sub)",padding:"6px 0",lineHeight:1.5 }}>{t}</div>
                 ))}
               </div>
 
@@ -2512,7 +2512,7 @@ function SunPowerUASite() {
 
       {/* ══ LOGOS MARQUEE (інтерактивна — тягнеться пальцем/мишкою в обидва боки) ══ */}
       <section style={{ padding:"10px 0",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",background:"#fff",overflow:"hidden",minHeight:100,display:"flex",flexDirection:"column",justifyContent:"center" }}>
-        <p style={{ textAlign:"center",fontSize:9,fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",color:"#555",opacity:.5,marginBottom:6 }}>НАДІЙНЕ ОБЛАДНАННЯ СВІТОВИХ БРЕНДІВ</p>
+        <p style={{ textAlign:"center",fontSize:9,fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",color:"var(--sub)",opacity:.5,marginBottom:6 }}>НАДІЙНЕ ОБЛАДНАННЯ СВІТОВИХ БРЕНДІВ</p>
         <BrandMarquee partners={PARTNERS}/>
       </section>
 
@@ -2531,7 +2531,7 @@ function SunPowerUASite() {
       </section>
 
       {/* ══ ADVANTAGES ══ */}
-      <section id="services" style={{ background:"linear-gradient(135deg,#1E6B2E,#22C55E)",padding:"clamp(28px,4vw,64px) 0",position:"relative",overflow:"hidden" }}>
+      <section style={{ background:"linear-gradient(135deg,#1E6B2E,#22C55E)",padding:"clamp(28px,4vw,64px) 0",position:"relative",overflow:"hidden" }}>
         <div className="noise"/>
         <div className="container" style={{ position:"relative",zIndex:1 }}>
           <div style={{ textAlign:"center",marginBottom:28 }}>
@@ -2568,7 +2568,7 @@ function SunPowerUASite() {
                   <span style={{ fontSize:11,fontWeight:700,color:"#22C55E",background:"rgba(34,197,94,.08)",borderRadius:100,padding:"3px 10px" }}>{s.price}</span>
                 </div>
                 <h3 style={{ marginBottom:8 }}>{s.title}</h3>
-                <p style={{ color:"#555",fontSize:13,lineHeight:1.7,marginBottom:14 }}>{s.desc}</p>
+                <p style={{ color:"var(--sub)",fontSize:13,lineHeight:1.7,marginBottom:14 }}>{s.desc}</p>
                 <button className="btn-outline-green" style={{ padding:"7px 14px",fontSize:12,marginTop:"auto",alignSelf:"flex-start" }} onClick={()=>{ if (s.link==="shop") setShopOpen(true); else openConsult(); }}>Детальніше <ArrowRight size={12}/></button>
               </div>
             ))}
@@ -2612,8 +2612,8 @@ function SunPowerUASite() {
                 <div style={{ padding:"16px 16px 12px" }}>
                   <div style={{ display:"flex",gap:8,flexWrap:"wrap",marginBottom:12 }}>
                     <span style={{ background:"#22C55E",color:"#fff",borderRadius:100,padding:"5px 14px",fontSize:13,fontWeight:700 }}>{p.kw}</span>
-                    <span style={{ background:"#f5f5f5",color:"#555",borderRadius:100,padding:"5px 14px",fontSize:13,fontWeight:500,border:"1px solid var(--border)" }}>{p.type}</span>
-                    <span style={{ background:"#f5f5f5",color:"#555",borderRadius:100,padding:"5px 14px",fontSize:13,fontWeight:500,border:"1px solid var(--border)" }}>{p.cat}</span>
+                    <span style={{ background:"#f5f5f5",color:"var(--sub)",borderRadius:100,padding:"5px 14px",fontSize:13,fontWeight:500,border:"1px solid var(--border)" }}>{p.type}</span>
+                    <span style={{ background:"#f5f5f5",color:"var(--sub)",borderRadius:100,padding:"5px 14px",fontSize:13,fontWeight:500,border:"1px solid var(--border)" }}>{p.cat}</span>
                   </div>
                   <h3 style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:17,letterSpacing:".02em",marginBottom:12 }}>{p.title}</h3>
                 </div>
@@ -2629,14 +2629,14 @@ function SunPowerUASite() {
       </section>
 
       {/* ══ ПОВЕРТАЄМО КОНТРОЛЬ ══ */}
-      <section style={{ background:"#F5F5F0", padding:"clamp(28px,4vw,64px) 0" }}>
+      <section style={{ background:"var(--base)", padding:"clamp(28px,4vw,64px) 0" }}>
         <div className="container">
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,440px),1fr))", gap:24, alignItems:"center" }}>
             <div>
               <h2 style={{ fontSize:"clamp(28px,5vw,48px)", marginBottom:20, lineHeight:1.1 }}>
                 Повертаємо Вам контроль<br/><span style={{ background:"linear-gradient(135deg,#22C55E,#F5C518)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", backgroundClip:"text" }}>над власною енергією</span>
               </h2>
-              <p style={{ fontSize:16, color:"#555", lineHeight:1.8, marginBottom:32 }}>
+              <p style={{ fontSize:16, color:"var(--sub)", lineHeight:1.8, marginBottom:32 }}>
                 Наша команда — практики, які знають, як вичавити з кожної станції максимум саме для вас. Працюємо чесно й прозоро та відповідаємо за результат на кожному об'єкті — від першого розрахунку до запуску.
               </p>
               <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
@@ -2654,7 +2654,7 @@ function SunPowerUASite() {
                 <div key={i} style={{ background:"#fff", borderRadius:16, padding:"20px", border:"1px solid rgba(34,197,94,.12)", textAlign:"center" }}>
                   <div style={{ fontSize:28, marginBottom:8 }}>{s.icon}</div>
                   <div style={{ fontFamily:"Syne,sans-serif", fontWeight:800, fontSize:28, color:"#22C55E", lineHeight:1, marginBottom:4 }}>{s.n}</div>
-                  <div style={{ fontSize:12, color:"#555", fontWeight:500 }}>{s.l}</div>
+                  <div style={{ fontSize:12, color:"var(--sub)", fontWeight:500 }}>{s.l}</div>
                 </div>
               ))}
             </div>
@@ -2679,7 +2679,7 @@ function SunPowerUASite() {
               <div key={i} style={{ textAlign:"center" }}>
                 <div style={{ width:56,height:56,borderRadius:"50%",background:"linear-gradient(135deg,#22C55E,#16A34A)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",boxShadow:"0 8px 24px rgba(34,197,94,.3)",fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:18,color:"#fff" }}>{s.n}</div>
                 <h3 style={{ marginBottom:8 }}>{s.title}</h3>
-                <p style={{ color:"#555",fontSize:13,lineHeight:1.7 }}>{s.desc}</p>
+                <p style={{ color:"var(--sub)",fontSize:13,lineHeight:1.7 }}>{s.desc}</p>
               </div>
             ))}
           </div>
@@ -2823,10 +2823,10 @@ function SunPowerUASite() {
                   <thead>
                     <tr>
                       {[
-                        { label:"Критерій", bg:"#f7f7f7", color:"#333" },
+                        { label:"Критерій", bg:"#f7f7f7", color:"var(--text)" },
                         { label:"☀️ СЕС+АКБ", bg:"#22C55E", color:"#fff" },
-                        { label:"⚡ Генератор", bg:"#f7f7f7", color:"#555" },
-                        { label:"🔌 Мережа", bg:"#f7f7f7", color:"#555" },
+                        { label:"⚡ Генератор", bg:"#f7f7f7", color:"var(--sub)" },
+                        { label:"🔌 Мережа", bg:"#f7f7f7", color:"var(--sub)" },
                       ].map((h,i)=>(
                         <th key={h.label} style={{ padding:"13px 14px",textAlign:i===0?"left":"center",fontSize:12,fontWeight:700,color:h.color,background:h.bg,fontFamily:"Syne,sans-serif",letterSpacing:".02em",whiteSpace:"nowrap" }}>{h.label}</th>
                       ))}
@@ -2844,7 +2844,7 @@ function SunPowerUASite() {
                       ["Гарантія","✅ 5–10 років","⚠️ 1–2 роки","—"],
                     ].map(([cr,...vals],ri,arr)=>(
                       <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
-                        <td style={{ padding:"11px 14px",fontSize:13,color:"#333",fontWeight:600,borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{cr}</td>
+                        <td style={{ padding:"11px 14px",fontSize:13,color:"var(--text)",fontWeight:600,borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{cr}</td>
                         {vals.map((v,vi)=>(
                           <td key={vi} style={{ padding:"11px 14px",fontSize:13,textAlign:"center",color:vi===0?"#16A34A":v.startsWith("❌")?"#EF4444":"#555",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.04)":"transparent",borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{v}</td>
                         ))}
@@ -2854,7 +2854,7 @@ function SunPowerUASite() {
                 </table>
               </div>
             </div>
-            <div className="show-mobile" style={{ textAlign:"center",fontSize:11,color:"#999",marginTop:10 }}>← гортайте таблицю пальцем →</div>
+            <div className="show-mobile" style={{ textAlign:"center",fontSize:11,color:"#aaa",marginTop:10 }}>← гортайте таблицю пальцем →</div>
           </div>
           <p style={{ textAlign:"center",fontSize:12,color:"#aaa",marginTop:16 }}>* Розрахунок для будинку 5 кВт·год/день, тариф 4.32 ₴/кВт·год</p>
         </div>
@@ -2924,7 +2924,7 @@ function SunPowerUASite() {
               <h2 style={{ marginBottom:8 }}>Наш офіс</h2>
               <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,marginBottom:28 }}/>
               <div style={{ background:"#F0FDF4",border:"1px solid rgba(34,197,94,.2)",borderRadius:20,padding:28 }}>
-                <p style={{ fontSize:15,color:"#555",lineHeight:1.7,marginBottom:24 }}>Завітайте до нас або зв'яжіться для безкоштовної консультації щодо сонячної станції</p>
+                <p style={{ fontSize:15,color:"var(--sub)",lineHeight:1.7,marginBottom:24 }}>Завітайте до нас або зв'яжіться для безкоштовної консультації щодо сонячної станції</p>
                 {[
                   { icon:<MapPin size={18} color="#22C55E"/>, text:"м. Вараш, вул. Комунальна 7" },
                   { icon:<Phone size={18} color="#22C55E"/>, text:"+38 (096) 203 38 39", href:"tel:+380962033839" },
@@ -3146,7 +3146,7 @@ function SunPowerUASite() {
               ) : (
                 <div style={{ textAlign:"center",padding:"24px 0" }}>
                   <div style={{ fontSize:36,marginBottom:8 }}>🔍</div>
-                  <p style={{ color:"#555",fontSize:14 }}>Нічого не знайдено за запитом <strong>"{searchQuery}"</strong></p>
+                  <p style={{ color:"var(--sub)",fontSize:14 }}>Нічого не знайдено за запитом <strong>"{searchQuery}"</strong></p>
                   <p style={{ color:"#aaa",fontSize:12,marginTop:6 }}>Спробуйте: панелі, інвертор, калькулятор, контакти</p>
                 </div>
               );
@@ -3246,20 +3246,20 @@ function SunPowerUASite() {
                 <div style={{ textAlign:"center",marginBottom:20 }}>
                   <div style={{ fontSize:36,marginBottom:8 }}>💬</div>
                   <h3 style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:18,marginBottom:6 }}>Залишіть побажання</h3>
-                  <p style={{ color:"#555",fontSize:13,lineHeight:1.5 }}>Ваша думка допомагає нам ставати кращими</p>
+                  <p style={{ color:"var(--sub)",fontSize:13,lineHeight:1.5 }}>Ваша думка допомагає нам ставати кращими</p>
                 </div>
 
                 {wishError ? (
                   <div style={{ background:"rgba(245,197,24,.1)",border:"1.5px solid #F5C518",borderRadius:12,padding:"14px 16px",textAlign:"center",marginBottom:16 }}>
                     <div style={{ fontSize:24,marginBottom:6 }}>🌞</div>
-                    <p style={{ fontSize:13,color:"#555",lineHeight:1.5 }}>{wishError}</p>
+                    <p style={{ fontSize:13,color:"var(--sub)",lineHeight:1.5 }}>{wishError}</p>
                     <button onClick={()=>setWishOpen(false)} className="btn-green" style={{ marginTop:14,justifyContent:"center",padding:"10px 24px",textTransform:"uppercase",fontSize:12 }}>Зрозуміло</button>
                   </div>
                 ) : (
                   <>
                     <div style={{ marginBottom:10 }}>
                       <div style={{ display:"flex",justifyContent:"space-between",marginBottom:4 }}>
-                        <label style={{ fontSize:11,fontWeight:600,color:"#555" }}>ПОБАЖАННЯ</label>
+                        <label style={{ fontSize:11,fontWeight:600,color:"var(--sub)" }}>ПОБАЖАННЯ</label>
                         <span style={{ fontSize:11,color:wishText.length>80?"#EF4444":"#aaa" }}>{wishText.length}/80</span>
                       </div>
                       <textarea
@@ -3273,7 +3273,7 @@ function SunPowerUASite() {
                         onBlur={e=>e.target.style.borderColor="#e5e7eb"}/>
                     </div>
                     <div style={{ marginBottom:16 }}>
-                      <label style={{ fontSize:11,fontWeight:600,color:"#555",display:"block",marginBottom:4 }}>ТЕЛЕФОН АБО EMAIL</label>
+                      <label style={{ fontSize:11,fontWeight:600,color:"var(--sub)",display:"block",marginBottom:4 }}>ТЕЛЕФОН АБО EMAIL</label>
                       <input type="text" placeholder="+380 96 203 38 39 або email@gmail.com"
                         value={wishContact} onChange={e=>setWishContact(e.target.value)}
                         style={{ width:"100%",padding:"10px 14px",border:"1.5px solid #e5e7eb",borderRadius:12,fontFamily:"DM Sans,sans-serif",fontSize:13,outline:"none" }}
@@ -3302,7 +3302,7 @@ function SunPowerUASite() {
               <div style={{ textAlign:"center",padding:"8px 0" }}>
                 <div style={{ fontSize:44,marginBottom:12 }}>🎉</div>
                 <h3 style={{ fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:18,marginBottom:8 }}>Дякуємо!</h3>
-                <p style={{ color:"#555",fontSize:14,lineHeight:1.6,marginBottom:16 }}>Ваше побажання отримано. Ми обов'язково врахуємо його!</p>
+                <p style={{ color:"var(--sub)",fontSize:14,lineHeight:1.6,marginBottom:16 }}>Ваше побажання отримано. Ми обов'язково врахуємо його!</p>
                 <button onClick={()=>setWishOpen(false)} className="btn-green" style={{ justifyContent:"center",padding:"12px 28px",textTransform:"uppercase" }}>Готово</button>
               </div>
             )}
