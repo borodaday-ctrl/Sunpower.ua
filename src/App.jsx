@@ -247,8 +247,6 @@ img{display:block;max-width:100%}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:#F5F5F5}
 ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#22C55E,#F5C518);border-radius:3px}
-*,*::before,*::after{box-sizing:border-box}
-html,body{overflow-x:hidden;max-width:100%}
 :root{
   --g1:#22C55E; --g2:#16A34A; --g3:#14532D;
   --y1:#F5C518; --y2:#EAB308;
@@ -273,10 +271,10 @@ html,body{overflow-x:hidden;max-width:100%}
 
 .reveal{opacity:1;transform:none}
 .reveal.in{opacity:1;transform:translateY(0)}
-.container{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,64px);box-sizing:border-box}
-.section{padding:clamp(32px,5vw,72px) 0;width:100%;box-sizing:border-box}
+.container{max-width:1200px;margin:0 auto;padding:0 clamp(14px,4vw,64px)}
+.section{padding:clamp(32px,5vw,72px) 0}
 
-h1{font-family:'Syne',sans-serif;font-size:clamp(28px,6vw,72px);font-weight:800;line-height:1.05;letter-spacing:-.03em}
+h1{font-family:'Syne',sans-serif;font-size:clamp(34px,7vw,84px);font-weight:800;line-height:1.0;letter-spacing:-.03em}
 h2{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,46px);font-weight:700;letter-spacing:-.02em;line-height:1.1}
 h3{font-family:'Syne',sans-serif;font-size:clamp(15px,2vw,20px);font-weight:700;letter-spacing:-.01em}
 
@@ -325,8 +323,6 @@ h3{font-family:'Syne',sans-serif;font-size:clamp(15px,2vw,20px);font-weight:700;
 .product-img{overflow:hidden;aspect-ratio:4/3;background:#F0F0EC}
 .product-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
 .cart-panel{position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);background:#fff;z-index:500;box-shadow:-16px 0 48px rgba(0,0,0,.14);display:flex;flex-direction:column;animation:slideIn .35s cubic-bezier(.16,1,.3,1)}
-.cart-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:9998;background:#1A1A1A;border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:toastIn .35s cubic-bezier(.16,1,.3,1);white-space:nowrap}
-@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .cart-overlay{position:fixed;inset:0;z-index:499;background:rgba(0,0,0,.4);animation:fadeIn .2s ease}
 .qty-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .qty-btn:hover{border-color:#22C55E;color:#22C55E;background:rgba(34,197,94,.07)}
@@ -537,19 +533,20 @@ function Logo({ size = 48 }) {
   );
 }
 
-/* ══ СТРІЧКА БРЕНДІВ — автопрокрутка + рідний touch-скрол + drag мишкою ══ */
+/* ══ СТРІЧКА БРЕНДІВ — на телефоні крутиться рідним скролом браузера (просто і надійно),
+   на комп'ютері можна тягнути мишкою; сама прокручується по колу, коли її не чіпають ══ */
 function BrandMarquee({ partners }) {
-  const DUPES = 8;
+  const DUPES = 6; // копій достатньо для безшовного закільцювання
   const scrollerRef = useRef(null);
-  const touchActiveRef = useRef(false);
+  const pausedRef = useRef(false);
+  const resumeTimerRef = useRef(null);
   const mouseDownRef = useRef(false);
   const mouseStartXRef = useRef(0);
   const mouseStartScrollRef = useRef(0);
-  const lastScrollRef = useRef(0);
-  const stuckCountRef = useRef(0);
   const [grabbing, setGrabbing] = useState(false);
 
-  // Ініціалізація позиції після завантаження картинок
+  // Стартуємо з середини набору копій, щойно реальна ширина стане відомою
+  // (після завантаження картинок) — це дає запас прокрутки в обидва боки.
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
@@ -557,42 +554,27 @@ function BrandMarquee({ partners }) {
     const tryInit = () => {
       if (inited) return;
       const w = el.scrollWidth / DUPES;
-      if (w <= 10) return;
+      if (w <= 0) return;
       inited = true;
-      el.scrollLeft = w * 2; // стартуємо з 2-го блоку — є запас з обох боків
+      el.scrollLeft = w * Math.floor(DUPES / 2);
     };
     tryInit();
     const ro = new ResizeObserver(tryInit);
     ro.observe(el);
-    // Повторна спроба коли картинки довантажились
-    const imgs = el.querySelectorAll('img');
-    imgs.forEach(img => img.addEventListener('load', tryInit, {once:true}));
     return () => ro.disconnect();
   }, []);
 
-  // Автопрокрутка — перевіряємо чи користувач торкається
+  // Автопрокрутка по колу + безшовне закільцювання країв
   useEffect(() => {
     let raf;
     const tick = () => {
       const el = scrollerRef.current;
-      if (el && !touchActiveRef.current && !mouseDownRef.current) {
+      if (el && !pausedRef.current && !mouseDownRef.current) {
         const w = el.scrollWidth / DUPES;
-        if (w > 10) {
-          el.scrollLeft += 0.55;
-          // Безшовне закільцювання
-          if (el.scrollLeft >= w * (DUPES - 2)) el.scrollLeft -= w;
+        if (w > 0) {
+          el.scrollLeft += 0.6;
+          if (el.scrollLeft >= w * (DUPES - 1)) el.scrollLeft -= w;
           else if (el.scrollLeft <= 0) el.scrollLeft += w;
-          // Детекція "застрягання" (наприклад прокрутка заблокована iOS)
-          if (Math.abs(el.scrollLeft - lastScrollRef.current) < 0.01) {
-            stuckCountRef.current++;
-            if (stuckCountRef.current > 120) { // ~2 секунди
-              el.scrollLeft = w * 2; // скидаємо позицію
-              stuckCountRef.current = 0;
-            }
-          } else {
-            stuckCountRef.current = 0;
-          }
-          lastScrollRef.current = el.scrollLeft;
         }
       }
       raf = requestAnimationFrame(tick);
@@ -601,33 +583,44 @@ function BrandMarquee({ partners }) {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  // Drag мишкою (десктоп)
-  const onMouseDown = e => {
-    mouseDownRef.current = true; setGrabbing(true);
+  const pause = () => {
+    pausedRef.current = true;
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+  };
+  const scheduleResume = () => {
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => { pausedRef.current = false; }, 1500);
+  };
+
+  // Перетягування мишкою (на тач-екранах рідний скрол спрацьовує сам по собі)
+  const onMouseDown = (e) => {
+    mouseDownRef.current = true; setGrabbing(true); pause();
     mouseStartXRef.current = e.clientX;
     mouseStartScrollRef.current = scrollerRef.current.scrollLeft;
   };
-  const onMouseMove = e => {
+  const onMouseMove = (e) => {
     if (!mouseDownRef.current || !scrollerRef.current) return;
     scrollerRef.current.scrollLeft = mouseStartScrollRef.current - (e.clientX - mouseStartXRef.current);
   };
-  const endDrag = () => { mouseDownRef.current = false; setGrabbing(false); };
+  const endMouseDrag = () => {
+    if (!mouseDownRef.current) return;
+    mouseDownRef.current = false; setGrabbing(false); scheduleResume();
+  };
 
   return (
     <div
       ref={scrollerRef}
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMove}
-      onMouseUp={endDrag}
-      onMouseLeave={endDrag}
-      onTouchStart={() => { touchActiveRef.current = true; }}
-      onTouchEnd={() => { setTimeout(() => { touchActiveRef.current = false; }, 600); }}
-      onTouchCancel={() => { touchActiveRef.current = false; }}
+      onMouseUp={endMouseDrag}
+      onMouseLeave={endMouseDrag}
+      onTouchStart={pause}
+      onTouchEnd={scheduleResume}
       className="brand-scroller"
-      style={{ display:"flex",gap:40,overflowX:"auto",WebkitOverflowScrolling:"touch",cursor:grabbing?"grabbing":"grab",userSelect:"none" }}>
+      style={{ display:"flex", gap:42, overflowX:"auto", WebkitOverflowScrolling:"touch", cursor:grabbing?"grabbing":"grab", userSelect:"none" }}>
       {Array.from({length:DUPES}).flatMap(()=>partners).map((b,i)=>(
         <span key={i} style={{ display:"inline-flex",alignItems:"center",flexShrink:0 }}>
-          <img src={b.logoSrc} alt={b.name} style={{height:52,objectFit:"contain",maxWidth:180}} draggable={false}/>
+          <img src={b.logoSrc} alt={b.name} style={{height:56,objectFit:"contain",maxWidth:220}} draggable={false}/>
         </span>
       ))}
     </div>
@@ -678,7 +671,6 @@ function Shop({ cart, setCart, products, onClose }) {
   const [detail, setDetail] = useState(null);
   const [detailTab, setDetailTab] = useState("opis");
   const [addedId, setAddedId] = useState(null);
-  const [toastItem, setToastItem] = useState(null);
   const [payStep, setPayStep] = useState(false);
   const [payMethod, setPayMethod] = useState("mono");
   const [orderName, setOrderName] = useState("");
@@ -716,7 +708,6 @@ function Shop({ cart, setCart, products, onClose }) {
     const withInstall = !(installMode === "without" && p.mountUAH);
     setCart(prev => { const ex=prev.find(i=>i.id===p.id); return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,price,withInstall,qty:1}]; });
     setAddedId(p.id); setTimeout(()=>setAddedId(null),1400);
-    setToastItem(p); setTimeout(()=>setToastItem(null), 3500);
   };
   const changeQty = (id,d) => setCart(prev=>prev.map(i=>i.id===id?{...i,qty:Math.max(1,i.qty+d)}:i));
   const removeItem = id => setCart(prev=>prev.filter(i=>i.id!==id));
@@ -1249,30 +1240,11 @@ function Shop({ cart, setCart, products, onClose }) {
           </div>
         </div></>
       )}
-
-      {/* ══ TOAST — сповіщення після додавання в кошик ══ */}
-      {toastItem && (
-        <div style={{ position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",zIndex:9998,background:"#1A1A1A",borderRadius:16,padding:"12px 16px",display:"flex",alignItems:"center",gap:12,boxShadow:"0 8px 32px rgba(0,0,0,.35)",animation:"toastIn .35s cubic-bezier(.16,1,.3,1)",maxWidth:"calc(100vw - 32px)" }}>
-          <div style={{ width:36,height:36,borderRadius:10,background:"rgba(34,197,94,.15)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
-            <Check size={18} color="#22C55E"/>
-          </div>
-          <div style={{ minWidth:0 }}>
-            <div style={{ fontSize:13,fontWeight:700,color:"#fff",marginBottom:2 }}>Додано в кошик</div>
-            <div style={{ fontSize:11,color:"rgba(255,255,255,.45)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:160 }}>{toastItem.name}</div>
-          </div>
-          <button
-            onClick={()=>{ setToastItem(null); setCartOpen(true); }}
-            style={{ flexShrink:0,background:"#22C55E",border:"none",borderRadius:10,padding:"8px 14px",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontWeight:700,fontSize:12,color:"#fff",whiteSpace:"nowrap" }}>
-            Кошик →
-          </button>
-          <button onClick={()=>setToastItem(null)} style={{ flexShrink:0,background:"rgba(255,255,255,.08)",border:"none",borderRadius:8,width:28,height:28,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }}>
-            <X size={13} color="rgba(255,255,255,.5)"/>
-          </button>
-        </div>
-      )}
     </div>
   );
 }
+
+/* ══ SOLAR CALCULATOR ══ */
 function SolarCalculator({ onOpenShop, products }) {
   /* ══ РЕЖИМ: null = вибір, "quick" = 3 питання, "precise" = 12 питань ══ */
   const [mode, setMode] = useState(null);
@@ -2272,22 +2244,20 @@ function SunPowerUASite() {
 
       {/* ══ HEADER — 3 іконки по центру ══ */}
       <header style={{ position:"fixed",top:0,left:0,right:0,zIndex:100, background:scrolled?"rgba(255,255,255,.98)":"rgba(10,10,6,.88)", backdropFilter:"blur(18px)", borderBottom:scrolled?"2px solid #22C55E":"1px solid rgba(255,255,255,.08)", transition:"all .4s cubic-bezier(.16,1,.3,1)", boxShadow:scrolled?"0 2px 16px rgba(34,197,94,.12)":"none", padding:scrolled?"2px 0":"0" }}>
-        <div style={{ maxWidth:1200,margin:"0 auto",padding:"0 clamp(12px,3vw,40px)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"clamp(8px,2vw,14px)",height:scrolled?56:64,transition:"height .35s cubic-bezier(.16,1,.3,1)" }}>
+        <div style={{ maxWidth:1200,margin:"0 auto",padding:"0 clamp(12px,4vw,48px)",display:"flex",alignItems:"center",justifyContent:"center",gap:16,height:scrolled?56:80,transition:"height .35s cubic-bezier(.16,1,.3,1)" }}>
 
-          {/* 🔰 Лого */}
+          {/* 🔰 Лого — велике з написом на початку, маленька іконка при скролі */}
           <div onClick={()=>setAboutOpen(true)} className="navbar-logo-btn" style={{ cursor:"pointer",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center" }}>
             <img src={scrolled?ICON_LOGO:REAL_LOGO} alt="Sun.Power.Ua"
-              style={{ height:scrolled?40:60, width:scrolled?40:60, objectFit:"contain", borderRadius:scrolled?0:6, transition:"all .35s cubic-bezier(.16,1,.3,1)" }}/>
+              style={{ height:scrolled?48:80, width:scrolled?48:80, objectFit:"contain", borderRadius:scrolled?0:8, transition:"all .35s cubic-bezier(.16,1,.3,1)" }}/>
           </div>
 
-          {/* Кнопки праворуч */}
-          <div style={{ display:"flex",alignItems:"center",gap:"clamp(5px,1.5vw,12px)",flexShrink:0 }}>
-          {/* 📞 Зв'язок */}
+          {/* 📞 Зв'язок — відкриває вибір способу (дзвінок/Viber/WhatsApp) */}
           <button
             onClick={()=>setContactOpen(true)}
-            style={{ width:42,height:42,borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",background:"#22C55E",border:"none",cursor:"pointer",boxShadow:"0 4px 14px rgba(34,197,94,.35)",flexShrink:0 }}
+            style={{ width:48,height:48,borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",background:"#22C55E",border:"none",cursor:"pointer",boxShadow:"0 4px 14px rgba(34,197,94,.35)",flexShrink:0 }}
             aria-label="Звʼязатися з нами">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.11 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.13 1 .37 1.97.72 2.9a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.18-1.18a2 2 0 012.11-.45c.93.35 1.9.59 2.9.72A2 2 0 0122 16.92z"/>
             </svg>
           </button>
@@ -2296,14 +2266,14 @@ function SunPowerUASite() {
           <button
             onClick={()=>{ setSearchQuery(""); setSearchOpen(true); }}
             className="navicon-search"
-            style={{ width:42,height:42,borderRadius:12,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .35s",background:"transparent",color:scrolled?"#333":"#fff",flexShrink:0 }}
+            style={{ width:48,height:48,borderRadius:14,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .35s",background:"transparent",color:scrolled?"#333":"#fff",flexShrink:0 }}
             aria-label="Пошук">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
           </button>
 
-          {/* 💬 Побажання */}
+          {/* 👥 Лічильник відвідувачів — клікабельний */}
           <button onClick={()=>{
               const last = localStorage.getItem("sunpower_wish_date");
               const today = new Date().toDateString();
@@ -2311,16 +2281,16 @@ function SunPowerUASite() {
               setWishError(""); setWishText(""); setWishContact(""); setWishSent(false); setWishOpen(true);
             }}
             className="navicon-wish"
-            style={{ width:42,height:42,borderRadius:12,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,background:"transparent",cursor:"pointer",transition:"all .25s" }}
+            style={{ width:48,height:48,borderRadius:14,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:2,flexShrink:0,background:"transparent",cursor:"pointer",transition:"all .25s" }}
             title="Залишити побажання">
-            <MessageCircle size={18} color={scrolled?"#1A1A1A":"#fff"}/>
+            <MessageCircle size={17} color={scrolled?"#1A1A1A":"#fff"}/>
           </button>
 
           {/* 🛒 Кошик */}
           <button
             onClick={()=>setShopOpen(true)}
             className="navicon-cart"
-            style={{ width:42,height:42,borderRadius:12,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .35s",background:"transparent",color:scrolled?"#333":"#fff",position:"relative",flexShrink:0,animation:"orderBlink 4s ease-in-out infinite" }}
+            style={{ width:48,height:48,borderRadius:14,border:scrolled?"1.5px solid rgba(0,0,0,.12)":"1.5px solid rgba(255,255,255,.18)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .35s",background:"transparent",color:scrolled?"#333":"#fff",position:"relative",flexShrink:0,animation:"orderBlink 4s ease-in-out infinite" }}
             aria-label="Кошик">
             {cartCount === 0 ? (
               <svg viewBox="0 0 110 95" width="30" height="26" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
@@ -2342,7 +2312,6 @@ function SunPowerUASite() {
               </span>
             )}
           </button>
-          </div>{/* /кнопки */}
 
         </div>
       </header>
@@ -2487,13 +2456,13 @@ function SunPowerUASite() {
           </div>
         </>
       )}
-      <section style={{ position:"relative",display:"flex",alignItems:"center",overflow:"hidden",background:"#080806",padding:"clamp(100px,18vw,160px) 0 clamp(60px,10vw,100px)" }}>
+      <section style={{ position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",overflow:"hidden",background:"#080806" }}>
         <div ref={heroRef} style={{ position:"absolute",inset:0,willChange:"transform" }}>
           <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1920&q=90" alt="СЕС Sun Power UA" loading="eager" decoding="async" style={{ width:"100%",height:"115%",objectFit:"cover",objectPosition:"center bottom" }}/>
           <div style={{ position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(8,8,6,.94) 0%,rgba(8,8,6,.68) 55%,rgba(8,8,6,.84) 100%)" }}/>
         </div>
-        <div style={{ position:"absolute",right:0,top:"10%",width:"40vw",height:"40vw",maxWidth:400,maxHeight:400,background:"radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 68%)",pointerEvents:"none" }}/>
-        <div className="container" style={{ position:"relative",zIndex:1,paddingTop:"clamp(80px,12vw,110px)",paddingBottom:"clamp(40px,6vw,80px)" }}>
+        <div style={{ position:"absolute",right:"-6%",top:"10%",width:500,height:500,background:"radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 68%)",pointerEvents:"none" }}/>
+        <div className="container" style={{ position:"relative",zIndex:1,paddingTop:110,paddingBottom:80 }}>
           <div style={{ maxWidth:800 }}>
             <div style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(34,197,94,.1)",border:"1px solid rgba(34,197,94,.22)",borderRadius:100,padding:"7px 15px",marginBottom:26,animation:"fadeUp .6s cubic-bezier(.16,1,.3,1) both" }}>
               <span style={{ width:7,height:7,borderRadius:"50%",background:"#22C55E",display:"block",animation:"pulse 2s ease-in-out infinite" }}/>
@@ -2542,15 +2511,15 @@ function SunPowerUASite() {
       </section>
 
       {/* ══ LOGOS MARQUEE (інтерактивна — тягнеться пальцем/мишкою в обидва боки) ══ */}
-      <section style={{ padding:"10px 0",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",background:"#fff",minHeight:100,display:"flex",flexDirection:"column",justifyContent:"center" }}>
+      <section style={{ padding:"10px 0",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)",background:"#fff",overflow:"hidden",minHeight:100,display:"flex",flexDirection:"column",justifyContent:"center" }}>
         <p style={{ textAlign:"center",fontSize:9,fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",color:"var(--sub)",opacity:.5,marginBottom:6 }}>НАДІЙНЕ ОБЛАДНАННЯ СВІТОВИХ БРЕНДІВ</p>
         <BrandMarquee partners={PARTNERS}/>
       </section>
 
       {/* ══ CALCULATOR ══ */}
       <section id="calculator" style={{ background:"#0A0A08", padding:"clamp(28px,5vw,72px) 0 clamp(80px,12vw,120px)", position:"relative", overflow:"hidden" }}>
-        <div style={{ position:"absolute",right:0,top:"5%",width:"35vw",height:"35vw",maxWidth:320,maxHeight:320,background:"radial-gradient(circle,rgba(34,197,94,.08) 0%,transparent 70%)",pointerEvents:"none" }}/>
-        <div style={{ position:"absolute",left:0,bottom:"0%",width:"30vw",height:"30vw",maxWidth:250,maxHeight:250,background:"radial-gradient(circle,rgba(245,197,24,.06) 0%,transparent 70%)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",right:"-10%",top:"5%",width:400,height:400,background:"radial-gradient(circle,rgba(34,197,94,.08) 0%,transparent 70%)",pointerEvents:"none" }}/>
+        <div style={{ position:"absolute",left:"-5%",bottom:"0%",width:300,height:300,background:"radial-gradient(circle,rgba(245,197,24,.06) 0%,transparent 70%)",pointerEvents:"none" }}/>
         <div className="container" style={{ position:"relative",zIndex:1 }}>
           <div style={{ textAlign:"center",marginBottom:32 }}>
             <span style={{ fontSize:11,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",display:"block",marginBottom:10 }}>КАЛЬКУЛЯТОР</span>
@@ -2840,54 +2809,54 @@ function SunPowerUASite() {
       </section>
 
       {/* ══ ПОРІВНЯЛЬНА ТАБЛИЦЯ: СЕС vs Генератор vs Мережа ══ */}
-      <section style={{ background:"#fff",padding:"clamp(28px,5vw,72px) 0" }}>
+      <section style={{ background:"#fff",padding:"clamp(32px,6vw,80px) 0" }}>
         <div className="container">
-          <div style={{ textAlign:"center",marginBottom:28 }}>
-            <span style={{ fontSize:11,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",display:"block",marginBottom:8 }}>ПОРІВНЯННЯ</span>
-            <h2 style={{ marginBottom:0 }}>СЕС проти альтернатив</h2>
-            <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"10px auto 0" }}/>
+          <div style={{ textAlign:"center",marginBottom:32 }}>
+            <span style={{ fontSize:11,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",color:"#22C55E",display:"block",marginBottom:10 }}>ПОРІВНЯННЯ</span>
+            <h2>СЕС проти альтернатив</h2>
+            <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"12px auto 0" }}/>
           </div>
-          <div style={{ border:"1px solid var(--border)",borderRadius:16,overflow:"hidden",boxShadow:"0 2px 16px rgba(0,0,0,.06)" }}>
-            <div style={{ overflowX:"auto",WebkitOverflowScrolling:"touch" }}>
-              <table style={{ width:"100%",borderCollapse:"collapse",minWidth:320 }}>
-                <thead>
-                  <tr>
-                    {[
-                      {l:"Критерій",  bg:"#f8f8f8", c:"var(--text)", align:"left"},
-                      {l:"☀️ СЕС+АКБ",bg:"#22C55E",  c:"#fff",       align:"center"},
-                      {l:"⚡ Генератор",bg:"#f8f8f8",c:"var(--sub)", align:"center"},
-                      {l:"🔌 Мережа",  bg:"#f8f8f8", c:"var(--sub)", align:"center"},
-                    ].map((h,i)=>(
-                      <th key={i} style={{ padding:"11px 12px",textAlign:h.align,fontSize:11,fontWeight:700,color:h.c,background:h.bg,fontFamily:"Syne,sans-serif",letterSpacing:".04em",borderBottom:"2px solid",borderBottomColor:i===1?"#16A34A":"#f0f0f0" }}>{h.l}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ["Вартість/міс","~0–350 ₴","800–3000 ₴","2000–5000 ₴"],
-                    ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
-                    ["Шум","✅ Безшумно","❌ Гучний","—"],
-                    ["Вихлоп/запах","✅ Немає","❌ Є","—"],
-                    ["Окупність","7–10 р","Ніколи","—"],
-                    ["Заробіток","✅ Зел. тариф","❌ Ні","❌ Ні"],
-                    ["Обслуговування","✅ Мінімальне","❌ Регулярне","—"],
-                    ["Гарантія","✅ 5–10 р","⚠️ 1–2 р","—"],
-                  ].map(([cr,...vals],ri,arr)=>(
-                    <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
-                      <td style={{ padding:"10px 12px",fontSize:12,color:"var(--text)",fontWeight:600,borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none" }}>{cr}</td>
-                      {vals.map((v,vi)=>(
-                        <td key={vi} style={{ padding:"10px 12px",fontSize:12,textAlign:"center",color:vi===0?"#16A34A":v.startsWith("❌")?"#EF4444":v.startsWith("⚠️")?"#B45309":"var(--sub)",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.04)":"transparent",borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none" }}>{v}</td>
+          <div style={{ position:"relative" }}>
+            <div style={{ border:"1px solid var(--border)",borderRadius:18,overflow:"hidden",boxShadow:"0 4px 24px rgba(0,0,0,.05)" }}>
+              <div style={{ overflowX:"auto",WebkitOverflowScrolling:"touch" }}>
+                <table style={{ width:"100%",borderCollapse:"separate",borderSpacing:0,minWidth:400 }}>
+                  <thead>
+                    <tr>
+                      {[
+                        { label:"Критерій", bg:"#f7f7f7", color:"var(--text)" },
+                        { label:"☀️ СЕС+АКБ", bg:"#22C55E", color:"#fff" },
+                        { label:"⚡ Генератор", bg:"#f7f7f7", color:"var(--sub)" },
+                        { label:"🔌 Мережа", bg:"#f7f7f7", color:"var(--sub)" },
+                      ].map((h,i)=>(
+                        <th key={h.label} style={{ padding:"13px 14px",textAlign:i===0?"left":"center",fontSize:12,fontWeight:700,color:h.color,background:h.bg,fontFamily:"Syne,sans-serif",letterSpacing:".02em",whiteSpace:"nowrap" }}>{h.label}</th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {[
+                      ["Вартість/міс","~0–350 ₴","800–3000 ₴","2000–5000 ₴"],
+                      ["При відключенні","✅ Автономія","✅ Працює","❌ Немає світла"],
+                      ["Шум","✅ Безшумно","❌ Гучний","—"],
+                      ["Вихлоп/запах","✅ Немає","❌ Є","—"],
+                      ["Окупність","7–10 р (дім)","Ніколи","—"],
+                      ["Заробіток","✅ Зелений тариф","❌ Ні","❌ Ні"],
+                      ["Обслуговування","✅ Мінімальне","❌ Регулярне","—"],
+                      ["Гарантія","✅ 5–10 років","⚠️ 1–2 роки","—"],
+                    ].map(([cr,...vals],ri,arr)=>(
+                      <tr key={cr} style={{ background:ri%2===0?"#fff":"#fafafa" }}>
+                        <td style={{ padding:"11px 14px",fontSize:13,color:"var(--text)",fontWeight:600,borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{cr}</td>
+                        {vals.map((v,vi)=>(
+                          <td key={vi} style={{ padding:"11px 14px",fontSize:13,textAlign:"center",color:vi===0?"#16A34A":v.startsWith("❌")?"#EF4444":"#555",fontWeight:vi===0?700:400,background:vi===0?"rgba(34,197,94,.04)":"transparent",borderBottom:ri<arr.length-1?"1px solid #f0f0f0":"none",whiteSpace:"nowrap" }}>{v}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
+            <div className="show-mobile" style={{ textAlign:"center",fontSize:11,color:"#aaa",marginTop:10 }}>← гортайте таблицю пальцем →</div>
           </div>
-          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:12,flexWrap:"wrap",gap:8 }}>
-            <p style={{ fontSize:11,color:"#aaa",margin:0 }}>* Для будинку 5 кВт·год/день, тариф 4.32 ₴/кВт·год</p>
-            <span className="show-mobile" style={{ fontSize:11,color:"#aaa" }}>← гортайте →</span>
-          </div>
+          <p style={{ textAlign:"center",fontSize:12,color:"#aaa",marginTop:16 }}>* Розрахунок для будинку 5 кВт·год/день, тариф 4.32 ₴/кВт·год</p>
         </div>
       </section>
 
@@ -3342,28 +3311,33 @@ function SunPowerUASite() {
       )}
 
       {/* ══ ЛИПКА КНОПКА "ОТРИМАТИ РОЗРАХУНОК" ══ */}
-      <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:997,background:"rgba(10,10,8,.97)",backdropFilter:"blur(12px)",borderTop:"1px solid rgba(34,197,94,.2)" }}>
-        {/* Мобільна версія */}
-        <div className="show-mobile" style={{ padding:"8px 14px",display:"flex",alignItems:"center",gap:8 }}>
-          <button className="btn-green" style={{ flex:1,padding:"11px 16px",fontSize:13,textTransform:"uppercase",whiteSpace:"nowrap",justifyContent:"center" }} onClick={openCalc}>
-            РОЗРАХУВАТИ ☀️
+      <div style={{ position:"fixed",bottom:0,left:0,right:0,zIndex:997,background:"rgba(10,10,8,.95)",backdropFilter:"blur(12px)",borderTop:"1px solid rgba(34,197,94,.2)" }}>
+        {/* Мобільна версія — компактна */}
+        <div className="show-mobile" style={{ padding:"10px 16px",display:"flex",alignItems:"center",gap:10 }}>
+          <div style={{ flex:1,minWidth:0 }}>
+            <div style={{ fontSize:11,color:"rgba(255,255,255,.5)",fontFamily:"DM Sans,sans-serif" }}>Дізнайтесь скільки зекономите</div>
+            <div style={{ fontSize:13,color:"#22C55E",fontWeight:700,fontFamily:"Syne,sans-serif",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis" }}>Безкоштовний розрахунок СЕС</div>
+          </div>
+          <button className="btn-green" style={{ padding:"11px 20px",fontSize:13,textTransform:"uppercase",whiteSpace:"nowrap",flexShrink:0 }} onClick={openCalc}>
+            Розрахувати ☀️
           </button>
           <button onClick={()=>setContactOpen(true)} style={{ width:42,height:42,borderRadius:12,background:"rgba(34,197,94,.15)",border:"1.5px solid rgba(34,197,94,.3)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0 }}>
             <Phone size={18} color="#22C55E"/>
           </button>
         </div>
-        {/* Десктопна версія */}
+        {/* Десктопна версія — на всю ширину, поділена навпіл */}
         <div className="hide-mobile" style={{ display:"grid",gridTemplateColumns:"1fr 1fr" }}>
-          <button onClick={openCalc} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"16px 24px",background:"#22C55E",border:"none",borderRight:"1px solid rgba(0,0,0,.15)",cursor:"pointer",transition:"background .2s" }}
+          <button onClick={openCalc} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"18px 24px",background:"#22C55E",border:"none",borderRight:"1px solid rgba(0,0,0,.15)",cursor:"pointer",transition:"background .2s" }}
             onMouseEnter={e=>e.currentTarget.style.background="#16A34A"} onMouseLeave={e=>e.currentTarget.style.background="#22C55E"}>
-            <span style={{ fontSize:18 }}>☀️</span>
-            <span style={{ color:"#fff",fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:14,textTransform:"uppercase",letterSpacing:".03em" }}>Безкоштовний розрахунок</span>
-            <ArrowRight size={15} color="#fff"/>
+            <span style={{ fontSize:20 }}>☀️</span>
+            <span style={{ color:"#fff",fontFamily:"Syne,sans-serif",fontWeight:800,fontSize:15,textTransform:"uppercase",letterSpacing:".03em" }}>Безкоштовний розрахунок СЕС</span>
+            <ArrowRight size={16} color="#fff"/>
           </button>
-          <button onClick={()=>setContactOpen(true)} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:10,padding:"16px 24px",background:"rgba(34,197,94,.12)",border:"none",cursor:"pointer",transition:"background .2s" }}
+          <button onClick={()=>setContactOpen(true)} style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"18px 24px",background:"rgba(34,197,94,.12)",border:"none",cursor:"pointer",transition:"background .2s" }}
             onMouseEnter={e=>e.currentTarget.style.background="rgba(34,197,94,.22)"} onMouseLeave={e=>e.currentTarget.style.background="rgba(34,197,94,.12)"}>
-            <Phone size={16} color="#22C55E"/>
-            <span style={{ color:"#fff",fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:14 }}>+38 (096) 203 38 39</span>
+            <Phone size={18} color="#22C55E"/>
+            <span style={{ color:"#fff",fontFamily:"Syne,sans-serif",fontWeight:700,fontSize:15 }}>Зв'язатися з нами</span>
+            <span style={{ color:"rgba(255,255,255,.5)",fontSize:13 }}>+38 (096) 203 38 39</span>
           </button>
         </div>
       </div>
