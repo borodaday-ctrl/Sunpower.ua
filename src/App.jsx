@@ -323,6 +323,8 @@ h3{font-family:'Syne',sans-serif;font-size:clamp(15px,2vw,20px);font-weight:700;
 .product-img{overflow:hidden;aspect-ratio:4/3;background:#F0F0EC}
 .product-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
 .cart-panel{position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);background:#fff;z-index:500;box-shadow:-16px 0 48px rgba(0,0,0,.14);display:flex;flex-direction:column;animation:slideIn .35s cubic-bezier(.16,1,.3,1)}
+.cart-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:9998;background:#1A1A1A;borderRadius:16px;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:toastIn .35s cubic-bezier(.16,1,.3,1);white-space:nowrap}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .cart-overlay{position:fixed;inset:0;z-index:499;background:rgba(0,0,0,.4);animation:fadeIn .2s ease}
 .qty-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .qty-btn:hover{border-color:#22C55E;color:#22C55E;background:rgba(34,197,94,.07)}
@@ -674,6 +676,7 @@ function Shop({ cart, setCart, products, onClose }) {
   const [detail, setDetail] = useState(null);
   const [detailTab, setDetailTab] = useState("opis");
   const [addedId, setAddedId] = useState(null);
+  const [toastItem, setToastItem] = useState(null);
   const [payStep, setPayStep] = useState(false);
   const [payMethod, setPayMethod] = useState("mono");
   const [orderName, setOrderName] = useState("");
@@ -711,6 +714,7 @@ function Shop({ cart, setCart, products, onClose }) {
     const withInstall = !(installMode === "without" && p.mountUAH);
     setCart(prev => { const ex=prev.find(i=>i.id===p.id); return ex?prev.map(i=>i.id===p.id?{...i,qty:i.qty+1}:i):[...prev,{...p,price,withInstall,qty:1}]; });
     setAddedId(p.id); setTimeout(()=>setAddedId(null),1400);
+    setToastItem(p); setTimeout(()=>setToastItem(null), 3500);
   };
   const changeQty = (id,d) => setCart(prev=>prev.map(i=>i.id===id?{...i,qty:Math.max(1,i.qty+d)}:i));
   const removeItem = id => setCart(prev=>prev.filter(i=>i.id!==id));
@@ -1243,11 +1247,30 @@ function Shop({ cart, setCart, products, onClose }) {
           </div>
         </div></>
       )}
+
+      {/* ══ TOAST — сповіщення після додавання в кошик ══ */}
+      {toastItem && (
+        <div style={{ position:"fixed",bottom:90,left:"50%",transform:"translateX(-50%)",zIndex:9998,background:"#1A1A1A",borderRadius:16,padding:"12px 16px",display:"flex",alignItems:"center",gap:12,boxShadow:"0 8px 32px rgba(0,0,0,.35)",animation:"toastIn .35s cubic-bezier(.16,1,.3,1)",maxWidth:"calc(100vw - 32px)" }}>
+          <div style={{ width:36,height:36,borderRadius:10,background:"rgba(34,197,94,.15)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0 }}>
+            <Check size={18} color="#22C55E"/>
+          </div>
+          <div style={{ minWidth:0 }}>
+            <div style={{ fontSize:13,fontWeight:700,color:"#fff",marginBottom:2 }}>Додано в кошик</div>
+            <div style={{ fontSize:11,color:"rgba(255,255,255,.45)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:160 }}>{toastItem.name}</div>
+          </div>
+          <button
+            onClick={()=>{ setToastItem(null); setCartOpen(true); }}
+            style={{ flexShrink:0,background:"#22C55E",border:"none",borderRadius:10,padding:"8px 14px",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontWeight:700,fontSize:12,color:"#fff",whiteSpace:"nowrap" }}>
+            Кошик →
+          </button>
+          <button onClick={()=>setToastItem(null)} style={{ flexShrink:0,background:"rgba(255,255,255,.08)",border:"none",borderRadius:8,width:28,height:28,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center" }}>
+            <X size={13} color="rgba(255,255,255,.5)"/>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
-
-/* ══ SOLAR CALCULATOR ══ */
 function SolarCalculator({ onOpenShop, products }) {
   /* ══ РЕЖИМ: null = вибір, "quick" = 3 питання, "precise" = 12 питань ══ */
   const [mode, setMode] = useState(null);
@@ -2820,8 +2843,8 @@ function SunPowerUASite() {
             <div style={{ width:60,height:3,background:"#22C55E",borderRadius:2,margin:"10px auto 0" }}/>
           </div>
           <div style={{ border:"1px solid var(--border)",borderRadius:16,overflow:"hidden",boxShadow:"0 2px 16px rgba(0,0,0,.06)" }}>
-            <div style={{ overflowX:"auto",WebkitOverflowScrolling:"touch",scrollBehavior:"smooth" }}>
-              <table style={{ width:"100%",borderCollapse:"collapse",minWidth:340 }}>
+            <div style={{ overflowX:"auto",WebkitOverflowScrolling:"touch" }}>
+              <table style={{ width:"100%",borderCollapse:"collapse",minWidth:320 }}>
                 <thead>
                   <tr>
                     {[
